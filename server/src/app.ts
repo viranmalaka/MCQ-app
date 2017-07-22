@@ -9,6 +9,8 @@ import * as path from "path";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import passport = require('passport')
+import {APIRoute} from "./routes/APIRoute";
+
 // import {APIRoute} from "./routes/api";
 
 /**
@@ -114,7 +116,9 @@ export class Server {
 
     //IndexRoute
     APIRoute.create(router);
-
+    router.get('/test', (req, res) => {
+      res.send('I am ok');
+    });
     //use router middleware
     this.app.use('/api', router);
   }
