@@ -11,12 +11,6 @@ export class APIRoute {
   public static create(router: Router) {
     // router.use('/user', UserRoute.createUserRoute(router));
     // router.use('/test', TestRoute.createUserRoute(router));
-    router.use('/school', new SchoolRouter(School,router).create());
-
-    router.get('/test', (req, res) => {
-      new SchoolController(School).find({}, (err, result) => {
-        res.jsonp(result);
-      });
-    });
+    router.use('/school', new SchoolRouter().create(router));
   }
 }

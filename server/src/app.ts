@@ -116,9 +116,7 @@ export class Server {
 
     //IndexRoute
     APIRoute.create(router);
-    router.get('/test', (req, res) => {
-      res.send('I am ok');
-    });
+
     //use router middleware
     this.app.use('/api', router);
   }

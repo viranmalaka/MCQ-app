@@ -6,4 +6,9 @@ import {ISchool} from "../models/School";
 
 export class SchoolController extends BaseController{
 
+  public modelValidator(data: ISchool): any{
+    console.log('validator from school');
+    return null;
+  }
+
 }
