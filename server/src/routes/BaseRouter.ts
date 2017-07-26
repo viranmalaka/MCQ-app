@@ -10,13 +10,11 @@ export class BaseRouter {
 
   }
 
-  public create(router: Router, type) {
-    router.route('/')
-      .get(this.find(type))
-      .post(this.add(type));
-
-    router.route('/:id')
-      .put(this.update(type));
+  public create(router: Router, type, block: Array<Actions> = []) {
+    if(block.indexOf(Actions.Find) == -1) router.get('/', this.find(type));
+    if(block.indexOf(Actions.Create) == -1) router.post('/', this.add(type));
+    if(block.indexOf(Actions.Update) == -1) router.put('/:id', this.update(type))
+    if(block.indexOf(Actions.Remove) == -1) router.delete('/:id', this.remove(type));
 
     return router;
   }
@@ -33,7 +31,7 @@ export class BaseRouter {
         delete req.query['_select'];
       }
       if(req.query['_id']){
-        new BaseController(type).findById(req.query['_id'], (err, results) => {
+        new BaseController(type).findById(req.query['_id'], select, (err, results) => {
           if(err) return next(err);
           res.jsonp({result: results});
         });
@@ -48,7 +46,7 @@ export class BaseRouter {
 
   private add(type){
     return function (req: Request, res: Response, next: NextFunction) {
-      new BaseController(type).add(req.body['data'], (err, result) =>{
+      new BaseController(type).add(req.body, (err, result) =>{
         if(err) return next(err);
         res.jsonp({result: result});
       });
@@ -57,7 +55,7 @@ export class BaseRouter {
 
   private update(type){
     return (req : Request, res : Response, next : NextFunction) => {
-      let id = req.body['_id'];
+      let id = req.params['id'];
       if(id){
         delete req.body['_id'];
         new BaseController(type).editById(id, req.body, (err, result) => {
@@ -68,12 +66,20 @@ export class BaseRouter {
     }
   }
 
-
+  private remove(type){
+    return (req: Request, res: Response, next: NextFunction) => {
+      let id = req.params['id'];
+      new BaseController(type).remove(id, (err, doc) => {
+        if(err) return next(err);
+        res.jsonp({result: doc});
+      })
+    }
+  }
 }
 
 export enum Actions{
   Find,
   Create,
-  Edit,
-  Delete
+  Update,
+  Remove,
 }
