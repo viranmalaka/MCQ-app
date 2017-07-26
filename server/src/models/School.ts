@@ -3,8 +3,8 @@
  */
 
 import { Schema, Model } from "mongoose";
-import { DBController } from "../controllers/dbController";
-import {Base, IBase, IBaseModel} from "./BaseModel";
+import { DBController } from "../controllers/db-controller";
+import { IBase, IBaseModel } from "./BaseModel";
 const dbCon = DBController.getInstance().getConnection();
 
 let schoolSchema: Schema = new Schema({

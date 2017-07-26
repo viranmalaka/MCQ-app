@@ -9,7 +9,7 @@ import * as path from "path";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import passport = require('passport')
-import {APIRoute} from "./routes/APIRoute";
+import {APIRoute} from "./routes/api-route";
 
 // import {APIRoute} from "./routes/api";
 
@@ -50,11 +50,11 @@ export class Server {
     //add routes
     this.routes();
 
-    //routers Error handling
-    this.onError();
-
     //add api
     this.api();
+
+    //routers Error handling
+    this.onError();
   }
 
   /**
@@ -64,7 +64,14 @@ export class Server {
    * @method api
    */
   public api() {
-    //empty for now
+    let router: express.Router;
+    router = express.Router();
+
+    //IndexRoute
+    APIRoute.create(router);
+
+    //use router middleware
+    this.app.use('/api', router);
   }
 
   /**
@@ -93,15 +100,6 @@ export class Server {
 
     //use override middlware
     this.app.use(methodOverride());
-
-    //create database connection
-    // DBController.getInstance().getConnection();
-
-    //Passport init
-    // this.app.use(passport.initialize());
-    // this.app.use(passport.session());
-
-    // UserController.initialize();
   }
 
   /**
@@ -111,14 +109,7 @@ export class Server {
    * @method api
    */
   public routes() {
-    let router: express.Router;
-    router = express.Router();
-
-    //IndexRoute
-    APIRoute.create(router);
-
-    //use router middleware
-    this.app.use('/api', router);
+    
   }
 
   public onError(){
@@ -130,7 +121,7 @@ export class Server {
 
       console.log('\x1b[31m' +  err.message + "\n\t" + " from --> " + err['from']);
 
-      res.status(err.status || 500).send({
+      res.status(err.status || 500).jsonp({
         success : false,
         msg :'SERVER - ' + err.message
       });

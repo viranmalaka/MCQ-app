@@ -1,7 +1,7 @@
-import {BaseRouter} from "./BaseRouter";
+import {BaseRouter} from "./base-router";
 import {Router} from "express";
 import {School} from "../models/School";
-import {Actions} from "./BaseRouter";
+import {Actions} from "./base-router";
 /**
  * Created by malaka on 7/21/17.
  */
@@ -13,6 +13,6 @@ export class SchoolRouter {
   }
 
   public create(router: Router): Router{
-    return this.baseRouter.create(router, School, [Actions.Find]);
+    return this.baseRouter.create(router, School);
   }
 }

@@ -1,4 +1,4 @@
-import {BaseController} from "./BaseController";
+import {BaseController} from "./base-controller";
 import {ISchool} from "../models/School";
 /**
  * Created by malaka on 7/21/17.
