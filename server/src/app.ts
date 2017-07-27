@@ -8,8 +8,11 @@ import * as logger from "morgan";
 import * as path from "path";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
-import passport = require('passport')
+import * as passport from 'passport';
 import {APIRoute} from "./routes/api-route";
+import {UserController} from "./controllers/user-controller";
+import {UserRouter} from "./routes/user-router";
+import {DBController} from "./controllers/db-controller";
 
 // import {APIRoute} from "./routes/api";
 
@@ -100,6 +103,14 @@ export class Server {
 
     //use override middlware
     this.app.use(methodOverride());
+
+    DBController.getInstance().getConnection();
+
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
+
+    UserRouter.initPassport();
+
   }
 
   /**

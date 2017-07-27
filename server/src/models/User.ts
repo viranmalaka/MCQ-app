@@ -22,7 +22,7 @@ let userSchema: Schema = new Schema({
 	reset_password_expires: {type : Date}
 });
 
-export const School : Model<IUserModel> = dbCon.model<IUserModel>("School", userSchema);
+export const User : Model<IUserModel> = dbCon.model<IUserModel>("User", userSchema);
 
 export interface IUser extends IBase{
 	username ?: String,
