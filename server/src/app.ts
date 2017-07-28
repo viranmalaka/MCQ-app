@@ -6,6 +6,7 @@ import * as cookieParser from "cookie-parser";
 import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
+import * as fs from "fs";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
 import * as passport from 'passport';
@@ -88,6 +89,9 @@ export class Server {
     this.app.use(express.static(path.join(__dirname, "public")));
 
     //use logger middlware
+    this.app.use(logger('common', {
+      stream: fs.createWriteStream('./access.log', {flags: 'a'})
+    }));
     this.app.use(logger("dev"));
 
     //use json form parser middlware

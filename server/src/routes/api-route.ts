@@ -7,11 +7,21 @@ import {UserRouter} from "./user-router";
 
 export class APIRoute {
   public static create(router: Router) {
-    router.use('/school', new SchoolRouter().create(router));
-    router.use('/user', new UserRouter().create(router));
+    router.get('/', UserRouter._validateToken, (req, res, next) => {
+      res.jsonp({api: 'welcome to api', user: req.user});
+    });
 
-  	router.get('/', (req, res) => {
-  		res.jsonp({api: 'welcome to api'});
-  	});
+    router.get('/test', APIRoute.middle, (req, res, next) => {
+      res.jsonp({test: req['test']});
+    });
+
+    router.use('/school', new SchoolRouter().create(router));
+
+    router.use('/user', new UserRouter().create(router));
+  }
+
+  public static middle(req, res, next){
+    req.test = 'test value fucking tmasha';
+    next();
   }
 }

@@ -12,23 +12,19 @@ import {User} from "../models/User";
 export class UserRouter {
 
   public create(router: Router): Router {
-    // router.use(this.login(router));
-    router.post('/signup',
-      UserRouter._passportLocal,
-      UserRouter._generateToken,
-      UserRouter.signup);
+    router.post('/signup', UserRouter.signup);
+
+    router.post('/login', UserRouter._passportLocal, UserRouter._generateToken, UserRouter.login);
 
     return router;
   }
 
   public static signup(req: Request, res: Response, next: NextFunction) {
-    console.log('here');
     new UserController(User).createUser(req.body, (user) => {
-      console.log(user);
       req.login(user, (err) => {              // after signup automatic login
         if (err) next(err);
-        console.log(user);
-        this._generateToken(req, res, () => {     // generate token
+        console.log('req.user', req.user);
+        UserRouter._generateToken(req, res, () => {     // generate token
           res.json({
             user: {
               acc_id: user.acc_id,
@@ -45,22 +41,51 @@ export class UserRouter {
     });
   }
 
+  public static login(req: Request, res: Response, next: NextFunction) {
+    res.json({                            // send the user with the token
+      user: {
+        acc_id: req.user.acc_id,
+        username: req.user.username,
+        email: req.user.email,
+        acc_type: req.user.acc_type,
+        profile_picture : req.user.profile_picture
+      },
+      token : req['token'],
+      success : true
+    });
+  }
+
+  // region middlewares
   public static _passportLocal(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('local', {        // passport auth
       session: false
     })(req, res, next);
   }
 
-
   public static _generateToken(req: Request, res: Response, next: NextFunction) {
     console.log('generate token');
-    req['token'] = jwt.sign({
-      id: req['user']['id']
-    }, 'secret', {
+    let x : object = {
+      id: req['user']['id'],
+    };
+    req['token'] = jwt.sign(x, 'secret', {
       expiresIn: '10h'
     });
     next();
   }
+
+  public static _validateToken(req, res, next) {
+    if(!req.get('token')){
+      next({message: 'no token in the request'});
+    }else{
+      let user = jwt.verify(req.get('token'), 'secret');
+      User.findById(user['id'], function (err, doc) {
+        console.log('set user');
+        req.user = doc;
+        next();
+      })
+    }
+  }
+  // endregion
 
   public static initPassport() {
     passport.use(new LocalStrategy.Strategy((username, password, done) => {
@@ -83,13 +108,11 @@ export class UserRouter {
     }));
 
     passport.serializeUser(function (user, done) {
-      done(null, user['id']);
+      done(null, user);
     });
 
-    passport.deserializeUser(function (id, done) {
-      User.findById(id, function (err, user) {
-        done(err, user);
-      });
+    passport.deserializeUser(function (user, done) {
+      done(null, user);
     });
   }
 }
