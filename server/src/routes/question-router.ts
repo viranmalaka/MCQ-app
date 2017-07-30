@@ -13,7 +13,8 @@ export class QuestionRouter {
     this.baseRouter = new BaseRouter();
   }
 
-  public create(router: Router): Router{
+  public create(): Router{
+    let router : Router = Router();
     return this.baseRouter.create(router, Question);
   }
 }

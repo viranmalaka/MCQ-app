@@ -3,7 +3,7 @@
  */
 
 import {BaseRouter} from "./base-router";
-import {Router} from "express";
+import {Express, Router} from "express";
 import {Paper} from "../models/Paper";
 
 export class PaperRouter {
@@ -13,10 +13,13 @@ export class PaperRouter {
     this.baseRouter = new BaseRouter();
   }
 
-  public create(router: Router): Router{
+  public create(): Router{
+    let router : Router = Router();
+
     router.get('/test', function (req, res) {
       res.send("in paper");
     });
+
     return this.baseRouter.create(router, Paper);
 
   }

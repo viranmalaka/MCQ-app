@@ -1,5 +1,7 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {BaseController} from "../controllers/base-controller";
+import {Student} from "../models/User";
+import {Base} from "../models/BaseModel";
 /**
  * Created by malaka on 7/21/17.
  */

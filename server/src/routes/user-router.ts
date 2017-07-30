@@ -12,10 +12,10 @@ import {Actions, BaseRouter} from "./base-router";
 
 export class UserRouter {
 
-  public create(router: Router): Router {
+  public create(): Router {
+  	let router: Router = Router();
     router.post('/signup', UserRouter.signup);
     router.post('/login', UserRouter.login);
-
 
     router.use('/student', new StudentRouter().create(router));
     router.use('/teacher', new TeacherRouter().create(router));
@@ -30,10 +30,10 @@ export class UserRouter {
         if (err) return next(err);
         res.json({
           user: {
-            acc_id: user.acc_id,
+            accId: user.accId,
             username: user.username,
             email: user.email,
-            acc_type: user.acc_type
+            accType: user.accType
           },
           token: UserRouter.getToken(user._id),
           status: 200
@@ -59,25 +59,17 @@ export class UserRouter {
         }
         return res.json({                            // send the user with the token
           user: {
-            acc_id: req.user.acc_id,
+            accId: req.user.accId,
             username: req.user.username,
             email: req.user.email,
-            acc_type: req.user.acc_type,
-            profile_picture: req.user.profile_picture
+            accType: req.user.accType,
+            profilePicture: req.user.profilePicture
           },
           token: UserRouter.getToken(user._id),
           success: true
         });
       });
     })(req, res, next);
-  }
-
-  public static getAccount(req : Request, res : Response, next : NextFunction){
-    if (!req.user) {
-      res.jsonp({status: 401});
-    }else{
-
-    }
   }
 
   public static _validateToken(req: Request, res: Response, next: NextFunction) {
@@ -140,7 +132,7 @@ class StudentRouter {
   }
 
   public create(router: Router): Router{
-    return this.baseRouter.create(router, Student, [Actions.Create, Actions.Remove]);
+    return this.baseRouter.create(router, Student);
   }
 }
 
