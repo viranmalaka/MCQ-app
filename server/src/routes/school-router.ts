@@ -1,7 +1,6 @@
 import {BaseRouter} from "./base-router";
 import {Router} from "express";
 import {School} from "../models/School";
-import {Actions} from "./base-router";
 /**
  * Created by malaka on 7/21/17.
  */

@@ -19,7 +19,8 @@
     "morgan": "~1.8.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "validator": "^8.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.0",
@@ -35,6 +36,7 @@
     "@types/node": "^8.0.14",
     "@types/passport": "^0.3.3",
     "@types/passport-local": "^1.0.30",
+    "@types/validator": "^6.2.1",
     "grunt": "^1.0.1",
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-copy": "^1.0.0",

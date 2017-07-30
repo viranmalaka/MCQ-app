@@ -3,7 +3,8 @@ import * as passport from "passport";
 import * as LocalStrategy from "passport-local";
 import * as jwt from "jsonwebtoken";
 import {UserController} from "../controllers/user-controller";
-import {User} from "../models/User";
+import {DataEntry, IUserModel, Student, Teacher, User} from "../models/User";
+import {Actions, BaseRouter} from "./base-router";
 
 /**
  * Created by MalakaD on 7/26/2017.
@@ -13,28 +14,29 @@ export class UserRouter {
 
   public create(router: Router): Router {
     router.post('/signup', UserRouter.signup);
+    router.post('/login', UserRouter.login);
 
-    router.post('/login', UserRouter._passportLocal, UserRouter._generateToken, UserRouter.login);
+
+    router.use('/student', new StudentRouter().create(router));
+    router.use('/teacher', new TeacherRouter().create(router));
+    router.use('/dataentry', new DataEntryRouter().create(router));
 
     return router;
   }
 
   public static signup(req: Request, res: Response, next: NextFunction) {
-    new UserController(User).createUser(req.body, (user) => {
-      req.login(user, (err) => {              // after signup automatic login
-        if (err) next(err);
-        console.log('req.user', req.user);
-        UserRouter._generateToken(req, res, () => {     // generate token
-          res.json({
-            user: {
-              acc_id: user.acc_id,
-              username: user.username,
-              email: user.email,
-              acc_type: user.acc_type
-            },
-            token: req['token'],
-            status: 200
-          });
+    new UserController(User).createUser(req.body, (err: Error, user: IUserModel) => {
+      req.login(user, (err: Error) => {              // after signup automatic login
+        if (err) return next(err);
+        res.json({
+          user: {
+            acc_id: user.acc_id,
+            username: user.username,
+            email: user.email,
+            acc_type: user.acc_type
+          },
+          token: UserRouter.getToken(user._id),
+          status: 200
         });
       });
 
@@ -42,50 +44,62 @@ export class UserRouter {
   }
 
   public static login(req: Request, res: Response, next: NextFunction) {
-    res.json({                            // send the user with the token
-      user: {
-        acc_id: req.user.acc_id,
-        username: req.user.username,
-        email: req.user.email,
-        acc_type: req.user.acc_type,
-        profile_picture : req.user.profile_picture
-      },
-      token : req['token'],
-      success : true
-    });
-  }
-
-  // region middlewares
-  public static _passportLocal(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('local', {        // passport auth
       session: false
+    }, function (err: Error, user: IUserModel, info) {
+      if (err) {
+        return next(err); // will generate a 500 error
+      }
+      if (! user) {
+        return res.send({ success : false, message : 'authentication failed' });
+      }
+      req.login(user, (loginErr: Error) => {
+        if (loginErr) {
+          return next(loginErr);
+        }
+        return res.json({                            // send the user with the token
+          user: {
+            acc_id: req.user.acc_id,
+            username: req.user.username,
+            email: req.user.email,
+            acc_type: req.user.acc_type,
+            profile_picture: req.user.profile_picture
+          },
+          token: UserRouter.getToken(user._id),
+          success: true
+        });
+      });
     })(req, res, next);
   }
 
-  public static _generateToken(req: Request, res: Response, next: NextFunction) {
-    console.log('generate token');
-    let x : object = {
-      id: req['user']['id'],
-    };
-    req['token'] = jwt.sign(x, 'secret', {
-      expiresIn: '10h'
-    });
-    next();
+  public static getAccount(req : Request, res : Response, next : NextFunction){
+    if (!req.user) {
+      res.jsonp({status: 401});
+    }else{
+
+    }
   }
 
-  public static _validateToken(req, res, next) {
-    if(!req.get('token')){
+  public static _validateToken(req: Request, res: Response, next: NextFunction) {
+    if (!req.get('token')) {
       next({message: 'no token in the request'});
-    }else{
+    } else {
       let user = jwt.verify(req.get('token'), 'secret');
-      User.findById(user['id'], function (err, doc) {
-        console.log('set user');
+      new UserController(User).findById(user['id'],'', function (err: Error, doc: IUserModel) {
         req.user = doc;
         next();
       })
     }
   }
-  // endregion
+
+  public static getToken(id) {
+    let x: object = {
+      id: id,
+    };
+    return jwt.sign(x, 'secret', {
+      expiresIn: '10h'
+    });
+  }
 
   public static initPassport() {
     passport.use(new LocalStrategy.Strategy((username, password, done) => {
@@ -114,5 +128,42 @@ export class UserRouter {
     passport.deserializeUser(function (user, done) {
       done(null, user);
     });
+  }
+}
+
+
+class StudentRouter {
+  private baseRouter: BaseRouter;
+
+  constructor(){
+    this.baseRouter = new BaseRouter();
+  }
+
+  public create(router: Router): Router{
+    return this.baseRouter.create(router, Student, [Actions.Create, Actions.Remove]);
+  }
+}
+
+class TeacherRouter {
+  private baseRouter: BaseRouter;
+
+  constructor(){
+    this.baseRouter = new BaseRouter();
+  }
+
+  public create(router: Router): Router{
+    return this.baseRouter.create(router, Teacher, [Actions.Create, Actions.Remove]);
+  }
+}
+
+class DataEntryRouter {
+  private baseRouter: BaseRouter;
+
+  constructor(){
+    this.baseRouter = new BaseRouter();
+  }
+
+  public create(router: Router): Router{
+    return this.baseRouter.create(router, DataEntry, [Actions.Create, Actions.Remove]);
   }
 }

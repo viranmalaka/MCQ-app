@@ -10,33 +10,78 @@ const dbCon = DBController.getInstance().getConnection();
 let userSchema: Schema = new Schema({
 	username: {type: String, required: true, unique : true},
 	password : {type: String, required: true},
-	acc_type : {type : String},                       // 'A', 'S', 'D', 'T'
-	acc_id : {type : Schema.Types.ObjectId},
+	accType : {type : String},                       // 'A', 'S', 'D', 'T'
+	accId : {type : Schema.Types.ObjectId},
 	email : {type : String, unique: true},
-	first_name : {type :String},
-	last_name : {type :String},
+	firstName : {type :String},
+	lastName : {type :String},
 	address : {type : String},
 	telephone : {type : String},
-	profile_picture : {type : String},
-	reset_password_token: {type : String},
-	reset_password_expires: {type : Date}
+	profilePicture : {type : String},
+	resetPasswordToken: {type : String},
+	resetPasswordExpires: {type : Date}
 });
 
-export const User : Model<IUserModel> = dbCon.model<IUserModel>("User", userSchema);
+let dataEntrySchema: Schema = new Schema({
+	papers : {type: Schema.Types.ObjectId, ref : 'Paper'}
+});
+
+let studentSchema : Schema = new Schema({
+	school : {type: Schema.Types.ObjectId, ref : 'School'},
+	enroll : [{type :Schema.Types.ObjectId, ref : 'Subject'}],
+	classGroup : [{type : Schema.Types.ObjectId,ref : 'ClassGroup'}],
+	birthday : {type :Date}
+});
+
+let teacherSchema : Schema = new Schema({
+	visibleName : {type : String},
+	subject : [{type :Schema.Types.ObjectId, ref : 'Subject'}],
+	classGroup : [{type : Schema.Types.ObjectId,ref : 'ClassGroup'}],
+	confirmed : {type : Boolean, required : true, default : false}
+});
 
 export interface IUser extends IBase{
 	username ?: String,
 	password ?: string,
-	acc_type ?: string,                       // 'A', 'S', 'D', 'T'
-	acc_id ?: string,
+	accType ?: string,                       // 'A', 'S', 'D', 'T'
+	accId ?: string,
 	email ?: string,
-	first_name ?: string,
-	last_name ?: string,
+	firstName ?: string,
+	lastName ?: string,
 	address ?: String,
 	telephone ?: String,
-	profile_picture ?: String,
-	reset_password_token?: String,
-	reset_password_expires?: Date
+	profilePicture ?: String,
+	resetPasswordToken?: String,
+	resetPasswordExpires?: Date
+}
+
+export interface IDataEntry extends IBase{
+	paper ?: any,
+}
+
+export interface IStudent extends IBase{
+	school ?: any,
+	enroll ?: any,
+	classGroup ?: any,
+	birthday ?: Date,
+}
+
+export interface ITeacher extends IBase{
+	visibleName ?: string,
+	subject ?: Array<any>,
+	classGroup ?: Array<any>,
+	confirmed ?: boolean,
 }
 
 export interface IUserModel extends IUser, IBaseModel{}
+export interface IDataEntryModel extends IDataEntry, IBaseModel{}
+export interface ITeacherModel extends ITeacher, IBaseModel{}
+export interface IStudentModel extends IStudent, IBaseModel{}
+
+export const DataEntry : Model<IDataEntryModel> = dbCon.model<IDataEntryModel>("DataEntry", dataEntrySchema);
+
+export const Teacher : Model<ITeacherModel> = dbCon.model<ITeacherModel>("Teacher", teacherSchema);
+
+export const Student : Model<IStudentModel> = dbCon.model<IStudentModel>("Student", studentSchema);
+
+export const User : Model<IUserModel> = dbCon.model<IUserModel>("User", userSchema);

@@ -1,5 +1,5 @@
 import {BaseController} from "./base-controller";
-import {IUser, User} from "../models/User";
+import {IDataEntry, IStudent, ITeacher, IUser, User} from "../models/User";
 import * as bcryptjs from "bcryptjs";
 
 /**
@@ -21,15 +21,15 @@ export class UserController extends BaseController {
         username: data.username,
         password: data.password,
         email: data.email,
-        acc_type: data.acc_type
+        acc_type: data.accType
       });
 
       bcryptjs.genSalt(10, (err, salt) => {                          // generate salt to encrypt
         bcryptjs.hash(newUser.password, salt, (err, hash) => {     // generate has with salt
           newUser.password = hash;                                    // replace hash with password
           newUser.save((err, user) => {                         // save the user
-            if (err) next(err);
-            next(user);
+            // if (err) next(err);
+            next(err, user);
             // if(user.acc_type == 'S'){
             // 	let thisStudent = new Student();
             // 	thisStudent.save(function (err, std) {
@@ -80,5 +80,29 @@ export class UserController extends BaseController {
     });
   };
 
+
+}
+
+export class DataEntryController extends BaseController{
+
+  public modelValidator(data: IDataEntry): any{
+    return null;
+  }
+
+}
+
+export class TeacherController extends BaseController{
+
+  public modelValidator(data: ITeacher): any{
+    return null;
+  }
+
+}
+
+export class StudentController extends BaseController{
+
+  public modelValidator(data: IStudent): any{
+    return null;
+  }
 
 }

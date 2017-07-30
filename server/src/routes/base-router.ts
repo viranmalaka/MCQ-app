@@ -89,6 +89,8 @@ export class BaseRouter {
       })
     }
   }
+
+  // TODO create a route to get count
 }
 
 export enum Actions{
