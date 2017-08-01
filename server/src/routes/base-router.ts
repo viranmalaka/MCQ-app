@@ -12,18 +12,20 @@ export class BaseRouter {
 
   }
 
-  public create(router: Router, type, block: Array<Actions> = []) {
-    if(block.indexOf(Actions.Find) == -1) router.get('/', this.find(type));
-    // if(block.indexOf(Actions.Find) == -1) router.post('/find', this.complexFind(type));
-    if(block.indexOf(Actions.Create) == -1) router.post('/', this.add(type));
-    if(block.indexOf(Actions.Update) == -1) router.put('/:id', this.update(type));
-    if(block.indexOf(Actions.Remove) == -1) router.delete('/:id', this.remove(type));
+  public create(router: Router, type, option: {userMapping : string, disableFields: Array<string>}) {
+    router.get('/', this.find(type, option));
+    // router.post('/find', this.complexFind(type, option));
+    router.post('/', this.add(type));
+    router.put('/:id', this.update(type));
+    router.delete('/:id', this.remove(type));
 
     return router;
   }
 
-  private find(type) {
+  private find(type, options) {
     return function (req: Request, res: Response, next: NextFunction) {
+
+      // collect request data
       let sort = '', select = '';
       if(req.query['_sort']){
         sort = req.query['_sort'].split(',').join(' ');
@@ -33,16 +35,45 @@ export class BaseRouter {
         select = req.query['_select'].split(',').join(' ');
         delete req.query['_select'];
       }
-      if(req.query['_id']){
-        new BaseController(type).findById(req.query['_id'], select, (err, results) => {
-          if(err) return next(err);
-          res.jsonp({status:200, result: results});
-        });
-      }else{
-        new BaseController(type).find(req.query, sort, select, (err, result) => {
-          if(err) return next(err);
-          res.jsonp({status:200, result: result});
-        })
+
+      // validate request user actions
+      if(req.user){
+      	if(req.user.accType === 'A'){ // for admin
+		      if(req.query['_id']){
+			      new BaseController(type).findById(req.query['_id'], select, (err, results) => {
+				      if(err) return next(err);
+				      res.jsonp({status:200, result: results});
+			      });
+		      }else{
+			      new BaseController(type).find(req.query, sort, select, (err, result) => {
+				      if(err) return next(err);
+				      res.jsonp({status:200, result: result});
+			      })
+		      }
+	      }else{                        // for normal users
+		      if(req.query['_id']){
+		      	if(req.query['_id'] === req.user._id){    // for his account
+				      new BaseController(type).findById(req.query['_id'], select, (err, results) => {
+					      if(err) return next(err);
+					      res.jsonp({status:200, result: results});
+				      });
+			      }else{                      // for another account
+				      new BaseController(type).findById(req.query['_id'],
+					      this.generateSelectQuery(select, options.disableFields),
+					      (err, results) => {
+					        if(err) return next(err);
+					        res.jsonp({status:200, result: results});
+				        });
+			      }
+		      }else{
+			      new BaseController(type).find(req.query, sort, select, (err, result) => {
+				      if(err) return next(err);
+				      res.jsonp({status:200, result: result});
+			      })
+		      }
+	      }
+      } else { // guests
+
       }
     };
   }
@@ -93,6 +124,11 @@ export class BaseRouter {
   }
 
   // TODO create a route to get count
+
+
+	private generateSelectQuery(select, options: Array<string>){
+
+	}
 }
 
 export enum Actions{

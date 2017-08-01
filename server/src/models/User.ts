@@ -23,7 +23,8 @@ let userSchema: Schema = new Schema({
 });
 
 let dataEntrySchema: Schema = new Schema({
-	papers : {type: Schema.Types.ObjectId, ref : 'Paper'}
+	papers : {type: Schema.Types.ObjectId, ref : 'Paper'},
+	confirmed : {type:Boolean, default:false},
 });
 
 let studentSchema : Schema = new Schema({
@@ -57,6 +58,7 @@ export interface IUser extends IBase{
 
 export interface IDataEntry extends IBase{
 	paper ?: any,
+	confirmed?: boolean,
 }
 
 export interface IStudent extends IBase{

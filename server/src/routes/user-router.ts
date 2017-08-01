@@ -12,14 +12,23 @@ import {Actions, BaseRouter} from "./base-router";
 
 export class UserRouter {
 
-  public create(): Router {
+	private baseRouter: BaseRouter;
+
+	constructor(){
+		this.baseRouter = new BaseRouter();
+	}
+
+	public create(): Router {
   	let router: Router = Router();
+
     router.post('/signup', UserRouter.signup);
     router.post('/login', UserRouter.login);
 
     router.use('/student', new StudentRouter().create(router));
     router.use('/teacher', new TeacherRouter().create(router));
     router.use('/dataentry', new DataEntryRouter().create(router));
+
+    router.use(this.baseRouter.create(router, User));
 
     return router;
   }
@@ -74,7 +83,7 @@ export class UserRouter {
 
   public static _validateToken(req: Request, res: Response, next: NextFunction) {
     if (!req.get('token')) {
-      next({message: 'no token in the request'});
+      next();
     } else {
       let user = jwt.verify(req.get('token'), 'secret');
       new UserController(User).findById(user['id'],'', function (err: Error, doc: IUserModel) {
