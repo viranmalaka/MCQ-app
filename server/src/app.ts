@@ -130,16 +130,12 @@ export class Server {
   public onError(){
     // error handler
     this.app.use(function (err: any, req: express.Request, res : express.Response, next : express.NextFunction) {
-      // set locals, only providing error in development
-      res.locals.message = err.message;
-      res.locals.error = req.app.get('dev') === 'development' ? err : {};
-
       console.log('\x1b[31m' +  err.message + "\n\t" + " from --> " + err['from']);
 
-      res.status(err.status || 500).jsonp({
-        success : false,
-        msg :'SERVER - ' + err.message
-      });
+	    res.status(err.status || 500).jsonp({
+		    success: false,
+		    error: err,
+	    });
     });
   }
 }

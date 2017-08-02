@@ -20,7 +20,7 @@ export class PaperRouter {
       res.send("in paper");
     });
 
-    return this.baseRouter.create(router, Paper);
+    return this.baseRouter.create(router, Paper,{});
 
   }
 }

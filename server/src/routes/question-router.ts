@@ -15,6 +15,6 @@ export class QuestionRouter {
 
   public create(): Router{
     let router : Router = Router();
-    return this.baseRouter.create(router, Question);
+    return this.baseRouter.create(router, Question, {});
   }
 }

@@ -1,5 +1,5 @@
 import {IBase, IBaseModel} from "../models/BaseModel";
-import {School} from "../models/School";
+const validator = require('validator');
 
 /**
  * Created by malaka on 7/21/17.
@@ -9,12 +9,14 @@ export class BaseController{
   constructor(private type){
   }
 
-  public add(data : IBase, next: Function){
-    let val = this.modelValidator(data);
+  public add(data : IBase, rules,next: Function){
+    let val = this.modelValidator(data, rules);
     if(val){
-      next(val);
+    	// val.message = 'Validation Error'
+      return next(val);
     }
-    new this.type(data).save(next);
+
+    return new this.type(data).save(next);
   }
 
   public find(query: any, sort: any, select:any, next : Function) {
@@ -26,7 +28,7 @@ export class BaseController{
   }
 
   public editById(id: any, data: IBase, next: Function){
-    let val = this.modelValidator(data);
+    let val = {};
     if(val){
       next(val);
     }
@@ -37,7 +39,27 @@ export class BaseController{
     this.type.findByIdAndRemove(id, next);
   }
 
-  public modelValidator(data: IBase): any{
-    console.log('validator from base');
+  public modelValidator(data: IBase, rules): any{
+	  let errorObj = null;
+	  Object.keys(rules).forEach(function (key) {
+	  	rules[key].forEach((valRule) => {
+	  		if(!validator[valRule.fun](data[key])){
+	  			if(!errorObj) errorObj = {};
+				  if(!errorObj[key]) errorObj[key] = {};
+				  errorObj[key]['value'] = data[key];
+				  if(errorObj[key]['message']){
+					  errorObj[key]['message'].push(valRule['msg']);
+				  }else{
+				  	errorObj[key]['message'] = [valRule['msg']];
+				  }
+			  }
+		  });
+	  });
+	  return errorObj;
   }
+
+  public count(query: any, next: Function) {
+    this.type.count(query, next);
+  }
+
 }

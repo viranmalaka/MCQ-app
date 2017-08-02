@@ -9,7 +9,7 @@ const dbCon = DBController.getInstance().getConnection();
 
 let schoolSchema: Schema = new Schema({
   index: {type: Number},
-  name : {type: String, required: true},
+  name : {type: String, required: true, unique: true},
   district : {type : String}
 });
 
