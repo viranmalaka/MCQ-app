@@ -4,6 +4,7 @@
 
 import { Document } from "mongoose";
 import { Model } from "mongoose";
+import {BaseController} from "../controllers/base-controller";
 
 export interface IBase{
 

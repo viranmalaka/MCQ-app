@@ -136,10 +136,17 @@ export class Server {
 
       console.log('\x1b[31m' +  err.message + "\n\t" + " from --> " + err['from']);
 
-      res.status(err.status || 500).jsonp({
-        success : false,
-        msg :'SERVER - ' + err.message
-      });
+      if(typeof err.message == "string"){
+        res.status(err.status || 500).jsonp({
+          success : false,
+          msg :'SERVER - ' + err.message
+        });
+      }else{
+	      res.status(err.status || 500).jsonp({
+		      success : false,
+		      msg : err.message
+	      });
+      }
     });
   }
 }
