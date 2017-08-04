@@ -12,11 +12,9 @@ export class BaseController{
   public add(data : IBase, rules,next: Function){
     let val = this.modelValidator(data, rules);
     if(val){
-    	// val.message = 'Validation Error'
-      return next(val);
+      next(val);
     }
-
-    return new this.type(data).save(next);
+    new this.type(data).save(next);
   }
 
   public find(query: any, sort: any, select:any, next : Function) {

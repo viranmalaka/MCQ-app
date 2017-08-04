@@ -2,7 +2,6 @@ import {NextFunction, Request, Response, Router} from "express";
 import {BaseController} from "../controllers/base-controller";
 import {Student} from "../models/User";
 import {Base} from "../models/BaseModel";
-import {DBController} from "../controllers/db-controller";
 /**
  * Created by malaka on 7/21/17.
  */
@@ -13,11 +12,10 @@ export class BaseRouter {
 
   }
 
-  public create(router: Router, type, rules) {
-    router.get('/', this.find(type, {}));
-    router.get('/count', this.count(type));
+  public create(router: Router, type, option: {userMapping : string, disableFields: Array<string>}) {
+    router.get('/', this.find(type, option));
     // router.post('/find', this.complexFind(type, option));
-    router.post('/', this.add(type, rules));
+    router.post('/', this.add(type, {}));
     router.put('/:id', this.update(type));
     router.delete('/:id', this.remove(type));
 
@@ -93,7 +91,7 @@ export class BaseRouter {
   private add(type, rules){
     return function (req: Request, res: Response, next: NextFunction) {
       new BaseController(type).add(req.body, rules, (err, result) =>{
-        if(err) return next({values : err});
+        if(err) return next(err);
         res.jsonp({status: 201, result: result});
       });
     }
@@ -125,14 +123,7 @@ export class BaseRouter {
     }
   }
 
-  private count(type){
-  	return (req: Request, res: Response, next: NextFunction) => {
-  		new BaseController(type).count(req.query, (err, count) => {
-  			if(err) return next(err);
-  			res.jsonp({status : 200, count: count});
-		  })
-	  }
-  }
+  // TODO create a route to get count
 
 
 	private generateSelectQuery(select, options: Array<string>){
