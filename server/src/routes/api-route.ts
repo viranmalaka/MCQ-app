@@ -10,14 +10,14 @@ import {QuestionRouter} from "./question-router";
 export class APIRoute {
   public static create(router: Router) {
 		router.use(UserRouter._validateToken);
-	  // router.get('/', (req, res) => {
-		 //  Student.find({}, (err, std)=>{
-			//   res.jsonp({api: 'welcome to api', user: std});
-		 //  });
-	  // });
+
 	  router.use('/paper', new PaperRouter().create());
 	  router.use('/school', new SchoolRouter().create());
 		router.use('/question', new QuestionRouter().create());
 	  router.use('/user', new UserRouter().create());
+
+	  router.get('/test_link', (req, res) => {
+	  	res.jsonp({status : 200, message: 'welcome to mcq-api-backend'});
+	  })
   }
 }

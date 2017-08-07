@@ -1,5 +1,5 @@
 import {BaseController} from "./base-controller";
-import {IDataEntry, IStudent, ITeacher, IUser, User, Student, Teacher, DataEntry} from "../models/User";
+import {DataEntry, IDataEntry, IStudent, ITeacher, IUser, Student, Teacher, User} from "../models/User";
 import * as bcryptjs from "bcryptjs";
 
 /**
@@ -23,13 +23,11 @@ export class UserController extends BaseController {
         email: data.email,
         accType: data.accType.toUpperCase()
       });
-
       bcryptjs.genSalt(10, (err, salt) => {                          // generate salt to encrypt
         bcryptjs.hash(newUser.password, salt, (err, hash) => {     // generate has with salt
           newUser.password = hash;                                    // replace hash with password
           newUser.save((err, user) => {                         // save the user
-	          if (err) next(err);
-	          console.log('new student');
+	          if (err) return next(err);
 	          if(user.accType == 'S'){
 	            let thisStudent = new Student();
             	return thisStudent.save((err, std) => {

@@ -29,7 +29,7 @@ module.exports = function(grunt) {
         options: {
           module: "commonjs",
           target: "es6",
-          sourceMap: false,
+          sourceMap: true,
           rootDir: "src"
         }
       }
@@ -46,7 +46,8 @@ module.exports = function(grunt) {
     },
     nodemon: {
       dev: {
-        script: './bin/www'
+        script: './bin/www',
+        args: ['inspect']
       }
     },
     concurrent: {
@@ -72,6 +73,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('dev', [
     'concurrent'
-  ])
-
+  ]);
 };

@@ -7,13 +7,12 @@ import * as express from "express";
 import * as logger from "morgan";
 import * as path from "path";
 import * as fs from "fs";
-import errorHandler = require("errorhandler");
-import methodOverride = require("method-override");
-import * as passport from 'passport';
+import * as passport from "passport";
 import {APIRoute} from "./routes/api-route";
-import {UserController} from "./controllers/user-controller";
 import {UserRouter} from "./routes/user-router";
 import {DBController} from "./controllers/db-controller";
+import errorHandler = require("errorhandler");
+import methodOverride = require("method-override");
 
 // import {APIRoute} from "./routes/api";
 
@@ -129,24 +128,17 @@ export class Server {
 
   public onError(){
     // error handler
-    this.app.use(function (err: any, req: express.Request, res : express.Response, next : express.NextFunction) {
+    this.app.use((err: any, req: express.Request, res : express.Response, next : express.NextFunction) => {
       // set locals, only providing error in development
-      res.locals.message = err.message;
-      res.locals.error = req.app.get('dev') === 'development' ? err : {};
+      // res.locals.message = err.message;
+      // res.locals.error = req.app.get('dev') === 'development' ? err : {};
 
       console.log('\x1b[31m' +  err.message + "\n\t" + " from --> " + err['from']);
 
-      if(typeof err.message == "string"){
-        res.status(err.status || 500).jsonp({
-          success : false,
-          msg :'SERVER - ' + err.message
-        });
-      }else{
-	      res.status(err.status || 500).jsonp({
-		      success : false,
-		      msg : err.message
-	      });
-      }
+      res.status(500).jsonp({
+        msg : err.message,
+	      status : err.status
+      });
     });
   }
 }

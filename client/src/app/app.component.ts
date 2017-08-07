@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import {Component} from "@angular/core";
 
 @Component({
   selector: 'mcq-root',
   template: `
-    <h1>
-      Welcome to {{title}}!!
-    </h1>
+    
+    <mcq-navbar></mcq-navbar>
   `,
   styles: []
 })
