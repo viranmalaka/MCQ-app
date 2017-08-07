@@ -17,7 +17,7 @@ export class APIRoute {
 	  router.use('/user', new UserRouter().create());
 
 	  router.get('/test_link', (req, res) => {
-	  	res.jsonp({status : 200, message: 'welcome to mcq-api-backend'});
+	  	res.jsonp({status : 1, message: 'welcome to mcq-api-backend'});
 	  })
   }
 }

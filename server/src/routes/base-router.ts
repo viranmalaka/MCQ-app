@@ -96,7 +96,6 @@ export class BaseRouter {
 				      // if the query object dosen't have ownership key we provide only otherActions.
 
 				      // ownership validation : (req.query[options.ownerShip] == user._id)
-
 				      if (req.query[options.ownerShip]) { // go to ownership validation
 					      if (req.query[options.ownerShip] == user._id) {
 						      // owner
@@ -214,6 +213,7 @@ export class BaseRouter {
     }
   }
 
+  // update whole object (owner or admin)
   private update(type, options: RouterConfig){
   	let controller = new BaseController(type);
     return (req : Request, res : Response, next : NextFunction) => {
@@ -234,12 +234,13 @@ export class BaseRouter {
 				        }
 				        res.jsonp({status: 3, result: result});
 			        });
+		        } else {
+		        	return next({status: 22, message: 'No privilege to update', from:'base-router: update'})
 		        }
 	        }else{
 	        	return next({status: 14, message: 'No such object', from:'base-router: update'})
 	        }
         });
-
       }
     }
   }
@@ -248,7 +249,7 @@ export class BaseRouter {
 	  return (req: Request, res: Response, next: NextFunction) => {
 		  if (req.user) {
 			  if (req.user.accType == 'A') {
-				  new BaseController(type).edit(req.params['id'], req.body, [], (err, result) => {
+				  new BaseController(type).edit(req.params['id'], req.body, options.ownerActions.u, (err, result) => {
 					  if (err) return next(err);
 					  return res.jsonp({status: 3, result: result});
 				  });
@@ -345,7 +346,7 @@ export class BaseRouter {
   private count(type, options: RouterConfig){
   	return (req: Request, res: Response, next: NextFunction) => {
   		if(req.user){
-  			if(options.otherActions[req.user.accType].r){
+  			if(options.otherActions[req.user.accType].r || req.user.accType == 'A'){
 				  new BaseController(type).count(req.query, (err, count) => {
 					  if(err) return next(err);
 					  res.jsonp({status : 4, count: count});
