@@ -15,7 +15,7 @@ export class UserController extends BaseController {
   public createUser(data: IUser, next) {
     let valErrors = this.modelValidator(data);
     if (valErrors) {           // check for any validation errors
-      return next(valErrors);
+      return next({value: valErrors});
     } else {
       let newUser = new User({                // create new user
         username: data.username,
