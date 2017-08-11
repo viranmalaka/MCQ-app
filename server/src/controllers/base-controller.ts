@@ -64,20 +64,28 @@ export class BaseController{
 
   public modelValidator(data: IBase, rules, fields?: Array<string>): any{
 	  let errorObj = null;
-	  Object.keys(rules).forEach(function (key) {
-	  	rules[key].forEach((valRule) => {
-	  		if(!validator[valRule.fun](data[key])){
+	  let valFunction = (key) => {
+		  rules[key].forEach((valRule) => {
+		  	if(valRule.expected) valRule.expected = true;
+			  let x = validator[valRule.fun](data[key] + '', valRule.inputs);
+		  	if(validator[valRule.fun](data[key] + '', valRule.inputs) !== valRule.expected){
 				  if(!errorObj) errorObj = {};
-	  			if(!errorObj[key]) errorObj[key] = {};
+				  if(!errorObj[key]) errorObj[key] = {};
 				  errorObj[key]['value'] = data[key];
 				  if(errorObj[key]['message']){
 					  errorObj[key]['message'].push(valRule['msg']);
 				  }else{
-				  	errorObj[key]['message'] = [valRule['msg']];
+					  errorObj[key]['message'] = [valRule['msg']];
 				  }
 			  }
 		  });
-	  });
+	  };
+	  if(fields){
+	  	Object.keys(fields).forEach(valFunction);
+	  }else{
+		  Object.keys(rules).forEach(valFunction);
+	  }
+
 	  return errorObj;
   }
 

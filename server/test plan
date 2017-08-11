@@ -1,37 +1,41 @@
 Test Plan
-Check all success request status code is 200
-Test inner status code is correct
-Test the result is object or array
-Check mandatory fields are exists.
-Use all combinations of users authentications and validations for model base requests
+=========
+    # Check all success request status code is 200
+    # Test inner status code is correct
+    # Test the result is object or array
+    # Check mandatory fields are exists.
+    # Use all combinations of users authentications and validations for model base requests
 
 API test link
-	Inner status – 2
-	Message should be there
+-------------
+	# Inner status – 2
+	# Message should be there
 
-# Authentication should be checked before checking models routes
-Model Route
-	Admin
-Add
-Send empty request object
-Send only required fields
-* Check each validation rules.
-Check uniqueness of fields
-Check relationships validations
+Generic Model
+-------------
+    $$ Admin
+        Add
+            1) Send normal success request
+            2) Send empty request object
+            3) Send only required fields
+            4) Check each validation rules.
+            5) Check uniqueness of fields
+            6) Check relationships validations
 
-Update
-Invalid _id
-Success update requests
-check validation errors
-check uniqueness of fields
-check relationships validations
-Edit
-Invalid _id
-Success update requests
-check validation errors
-check uniqueness of fields
-check relationships validations
-check non allowed filed to update
+        Update
+            1) Success update requests
+            2) Invalid _id
+            3) check validation errors
+            4) check uniqueness of fields
+            5) check relationships validations
+
+        Edit
+            1) Invalid _id
+            2) Success update requests
+            3) check validation errors
+            4) check uniqueness of fields
+            5) check relationships validations
+            6) check non allowed filed to update
 
 Find
 All objects

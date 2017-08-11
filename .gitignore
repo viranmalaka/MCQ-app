@@ -1,3 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
 /server/node_modules
 /client/node_modules
+/.idea
+/.vscode
+/server/.tscache/
+/server/dist/
+/server/tscommand-*.txt
+access.log
+/server/access.log
