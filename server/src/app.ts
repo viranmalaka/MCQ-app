@@ -137,7 +137,7 @@ export class Server {
 
       res.status(500).jsonp({
         msg : err.message,
-	      status : err.status
+	      status : err.status,
       });
     });
   }

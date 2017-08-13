@@ -2,7 +2,8 @@ const validator = require('validator');
 /**
  * Created by malaka on 7/21/17.
  */
-export const DISTRICT_LIST = ['Ampara',
+export const DISTRICT_LIST = [
+	'Ampara',
 	'Anuradhapura',
 	'Badulla',
 	'Batticaloa',
@@ -33,11 +34,11 @@ export class SchoolController{
 	public static rules = {
 		name : [
 			{fun: 'isEmpty', expected: false, msg: 'Name cannot be empty'},
-			{fun: 'matches', inputs: '/^[a-zA-Z ]+$/', msg: 'Invalid name' }
+			{fun: 'regex', inputs: /^[a-zA-Z.,/()\-' ]+$/, msg: 'Invalid name' }
 		],
 		district : [
-			{fun: 'isAlpha', msg: 'District should be alpha'},
-			{fun: 'isLowercase', msg: 'District should be lower case'}
+			{fun: 'isEmpty', expected: false, msg: 'District cannot be empty'},
+			{fun: 'isIn', inputs: DISTRICT_LIST, msg: 'Invalid District'}
 		]
 	};
 

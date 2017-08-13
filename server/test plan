@@ -37,21 +37,22 @@ Generic Model
             5) check relationships validations
             6) check non allowed filed to update
 
-Find
-All objects
-By _id
-Set selections _select
-Set selections with (-) prefix
-Send wrong _id
-Send invalid _id
-By query
-Set selections _select
-Set selections with (-) prefix
-Set sorting _sort
-Set sorting with (-) prefix
-Set both _select and _sort
-Send wrong data in query
-Send wrong field name in select
+        Find
+            1) All objects
+            #### By _id  
+                Set selections 
+                Set selections with (-) prefix
+                Send wrong _id
+                Send invalid _id
+                check all allowed fields are there
+            By query
+                Set selections _select
+                Set selections with (-) prefix
+                Set sorting _sort
+                Set sorting with (-) prefix
+                Set both _select and _sort
+                Send wrong data in query
+                Send wrong field name in select
 Remove
 Success remove
 Invalid _id
