@@ -33,16 +33,22 @@ export class BaseController {
 		this.type.findByIdAndUpdate(id, data, next);
 	}
 
-	public edit(id: string, data: any, allowedFields: Array<string>, next: Function) {
+	public edit(id: string, data: any, rules:any, allowedFields: Array<string>, next: Function) {
 		this.type.findById(id, (err, doc) => {
 			if (err) next(err);
 			if (doc) {
-				(allowedFields.length > 0 ? allowedFields : Object.keys(data)).forEach(x => {
-					if (data[x]) {
-						doc[x] = data[x];
-					}
-				});
-				doc.save(next);
+				let active = allowedFields.length > 0 ? allowedFields : Object.keys(data);
+				let val = this.modelValidator(data, rules, active);
+				if (!val) {
+					(active).forEach(x => {
+						if (data[x]) {
+							doc[x] = data[x];
+						}
+					});
+					doc.save(next);
+				} else {
+					return next({status: 16, message: val, from: 'BaseController: edit'});
+				}
 			} else {
 				return next({status: 404, message: 'No such object'});
 			}
@@ -77,12 +83,16 @@ export class BaseController {
 				}
 			});
 		};
-		if (fields) {
-			Object.keys(fields).forEach(valFunction);
-		} else {
-			Object.keys(rules).forEach(valFunction);
-		}
 
+		Object.keys(rules).forEach((key) => {
+			if(fields.length > 0){
+				if(fields.indexOf(key) >= 0){
+					valFunction(key);
+				}
+			}else{
+				valFunction(key);
+			}
+		});
 		return errorObj;
 	}
 

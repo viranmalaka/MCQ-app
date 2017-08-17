@@ -64,6 +64,8 @@ export class BaseRouter {
 				      res.jsonp({status:4, result: results});
 			      });
 		      }else{
+		      	console.log("Select", select);
+		      	console.log("sort", sort);
 			      new BaseController(type).find(req.query, sort, select, (err, result) => {
 				      if(err) return next(err);
 				      res.jsonp({status:4, result: result});
@@ -246,9 +248,8 @@ export class BaseRouter {
 
   private edit(type, options: RouterConfig){
 	  return (req: Request, res: Response, next: NextFunction) => {
-
 	  	let editFunction = (opt) => {
-			  new BaseController(type).edit(req.params['id'], req.body, opt, (err, result) => {
+			  new BaseController(type).edit(req.params['id'], req.body, options.validationRules, opt, (err, result) => {
 				  if (err) return next(err);
 				  return res.jsonp({status: 3, result: result});
 			  });
