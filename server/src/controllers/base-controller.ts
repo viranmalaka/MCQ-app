@@ -85,7 +85,7 @@ export class BaseController {
 		};
 
 		Object.keys(rules).forEach((key) => {
-			if(fields.length > 0){
+			if(fields && fields.length > 0){
 				if(fields.indexOf(key) >= 0){
 					valFunction(key);
 				}

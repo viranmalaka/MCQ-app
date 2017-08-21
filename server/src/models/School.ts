@@ -8,6 +8,7 @@ import {IBase, IBaseModel} from "./BaseModel";
 const dbCon = DBController.getInstance().getConnection();
 
 let schoolSchema: Schema = new Schema({
+  __v: { type: Number, select: false},
   name : {type: String, required: true},
   district : {type : String}
 });

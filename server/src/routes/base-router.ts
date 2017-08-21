@@ -47,7 +47,7 @@ export class BaseRouter {
       // collect request data
       let sort = '', select = '';
       if(req.query['_sort']){
-        sort = req.query['_sort'].split(',');
+        sort = req.query['_sort'].split(',').join(' ');
         delete req.query['_sort'];
       }
       if(req.query['_select']){
@@ -55,21 +55,19 @@ export class BaseRouter {
         delete req.query['_select'];
       }
 
+      // common function
+	    let resultGenFunction =  (err, result) => {
+			    if (err) return next(err);
+			    res.jsonp({status: 4, result: result});
+	    };
+
       if(user){
       	// authenticated User
 	      if(accType == 'A'){  // admin
 		      if(req.query['_id']){
-			      new BaseController(type).findById(req.query['_id'], select, (err, results) => {
-				      if(err) return next(err);
-				      res.jsonp({status:4, result: results});
-			      });
+			      new BaseController(type).findById(req.query['_id'], select, resultGenFunction);
 		      }else{
-		      	console.log("Select", select);
-		      	console.log("sort", sort);
-			      new BaseController(type).find(req.query, sort, select, (err, result) => {
-				      if(err) return next(err);
-				      res.jsonp({status:4, result: result});
-			      })
+			      new BaseController(type).find(req.query, sort, select, resultGenFunction)
 		      }
 	      } else {             // owner + others
 		      if (options.ownerShip) {
@@ -101,17 +99,11 @@ export class BaseRouter {
 				      if (req.query[options.ownerShip]) { // go to ownership validation
 					      if (req.query[options.ownerShip] == user._id) {
 						      // owner
-						      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.ownerActions.r), (err, result) => {
-							      if (err) return next(err);
-							      res.jsonp({status: 4, result: result});
-						      })
+						      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.ownerActions.r), resultGenFunction)
 					      } else {
 						      // others
 						      if (options.otherActions[accType].r) {
-							      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), (err, result) => {
-								      if (err) return next(err);
-								      res.jsonp({status: 2, result: result});
-							      })
+							      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), resultGenFunction)
 						      }else{
 						      	// error
 							      return next({status : 22, message : 'No privilege to read', from:'base-router: find'});
@@ -121,10 +113,7 @@ export class BaseRouter {
 				      	// no ownership validation, give others actions.
 					      if(options.otherActions[accType].r){
 					      	// others can read
-						      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), (err, result) => {
-							      if (err) return next(err);
-							      res.jsonp({status: 4, result: result});
-						      })
+						      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), resultGenFunction)
 					      }else{
 					      	// error
 						      return next({status : 22, message : 'No privilege to read', from:'base-router: find'});
@@ -136,15 +125,9 @@ export class BaseRouter {
 			      if (options.otherActions[accType].r) {
 			      	// others can read
 				      if (req.query['_id']) {
-					      new BaseController(type).findById(req.query['_id'], this.commonSelect(select, options.otherActions[accType].r), (err, results) => {
-						      if (err) return next(err);
-						      res.jsonp({status: 4, result: results});
-					      });
+					      new BaseController(type).findById(req.query['_id'], this.commonSelect(select, options.otherActions[accType].r), resultGenFunction);
 				      } else {
-					      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), (err, result) => {
-						      if (err) return next(err);
-						      res.jsonp({status: 4, result: result});
-					      })
+					      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), resultGenFunction)
 				      }
 			      } else {
 			      	// error
@@ -156,15 +139,9 @@ export class BaseRouter {
 	      // a guest
 	      if (options.guestActions.r) {
 		      if (req.query['_id']) {
-			      new BaseController(type).findById(req.query['_id'], this.commonSelect(select, options.guestActions.r), (err, results) => {
-				      if (err) return next(err);
-				      res.jsonp({status: 4, result: results});
-			      });
+			      new BaseController(type).findById(req.query['_id'], this.commonSelect(select, options.guestActions.r), resultGenFunction);
 		      } else {
-			      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.guestActions.r), (err, result) => {
-				      if (err) return next(err);
-				      res.jsonp({status: 4, result: result});
-			      })
+			      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.guestActions.r), resultGenFunction)
 		      }
 	      } else {
 		      //error
@@ -343,38 +320,38 @@ export class BaseRouter {
 
   private count(type, options: RouterConfig){
   	return (req: Request, res: Response, next: NextFunction) => {
-  		if(req.user){
-  			if(options.otherActions[req.user.accType].r || req.user.accType == 'A'){
-				  new BaseController(type).count(req.query, (err, count) => {
-					  if(err) return next(err);
-					  res.jsonp({status : 4, count: count});
-				  })
-			  }else{
-  				return next({status : 22, message : 'No privilege to find', from:'base-router: count'});
-			  }
+		  if(req.user ? req.user.accType == 'A' || options.otherActions[req.user.accType].r : options.guestActions.r){
+			  new BaseController(type).count(req.query, (err, count) => {
+				  if(err) return next(err);
+				  res.jsonp({status : 4, count: count});
+			  })
 		  }else{
-  			if(options.guestActions.r){
-				  new BaseController(type).count(req.query, (err, count) => {
-					  if(err) return next(err);
-					  res.jsonp({status : 4, count: count});
-				  })
-			  }else{
-				  return next({status : 21, message : 'No privilege to find', from:'base-router: count'});
-			  }
+			  return next({status : (req.user ? 22 : 21), message : 'No privilege to find', from:'base-router: count'});
 		  }
 	  }
   }
+
 	public commonSelect(select: Array<string>, canSelect: Array<string>){
 		let x;
 		if(select.length !== 0){
-			x = select.filter((n) => {
-				if(canSelect.indexOf(n) !== -1){
-					return true;
-				}else if(canSelect.indexOf(n.substring(1)) !== 1){
-					return false;
+			let isNeg = false;
+			select.forEach(val => {
+				if(val.substring(0,1) ===  '-') {
+					if(val !== '-_id') isNeg = true;
 				}
-				return false;
 			});
+			if(isNeg){
+				x = canSelect.filter(val => {
+					return select.indexOf('-' + val) < 0;
+				});
+			}else{
+				x = select.filter(val => {
+					return canSelect.indexOf(val) > -1;
+				})
+			}
+			if(select.indexOf('-_id') > -1){
+				x.unshift('-_id');
+			}
 		}else{
 			x = canSelect;
 		}
