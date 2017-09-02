@@ -1,0 +1,18 @@
+.sidenav-container{
+  height: 100%;
+}
+
+.sidenav-toolbar {
+  background: #272b35;
+  padding: 0 14px 0 24px;
+  z-index: 3;
+}
+
+.sidenav-scrollbar-container{
+  height: 100%;
+}
+
+.sidenav-item-name{
+  margin-left: 24px;
+  font-size: 14px;
+}

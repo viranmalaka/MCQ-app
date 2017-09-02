@@ -1,0 +1,45 @@
+.mat-sidenav-container {
+  background-color: #fafafa;
+  color: rgba(0, 0, 0, .87);
+  height:100%;
+}
+
+.sidenav {
+  width: 280px;
+  max-width: 250px;
+  background: #2b303b;
+  overflow-x: hidden;
+  z-index: 4;
+}
+
+.mat-sidenav-container {
+  background-color: #fafafa;
+  color: rgba(0, 0, 0, .87)
+}
+
+.mat-sidenav {
+  color: rgba(0, 0, 0, .87)
+}
+
+.mat-sidenav,
+.mat-sidenav.mat-sidenav-push {
+  background-color: #fff
+}
+
+.mat-sidenav-backdrop.mat-sidenav-shown {
+  background-color: rgba(0, 0, 0, .6)
+}
+
+.quickpanel .mat-tab-body-content,
+.quickpanel .mat-tab-body-wrapper,
+.quickpanel md-tab-body,
+.quickpanel md-tab-group {
+  height: 100%
+}
+
+.mat-sidenav.quickpanel {
+  z-index: 100;
+  width: 330px;
+  min-width: 330px;
+  max-width: 330px;
+}

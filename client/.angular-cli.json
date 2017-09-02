@@ -19,6 +19,10 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "mcq",
       "styles": [
+        "assets/fonts/linea/styles.css",
+        "assets/fonts/header/_flaticon.scss",
+        "assets/fonts/data-table/icons.css",
+        "assets/styles/app.scss",
         "styles.css"
       ],
       "scripts": [],

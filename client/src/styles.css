@@ -1,2 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import 'https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.15/css/perfect-scrollbar.min.css';
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700);
+
+body, html {
+  min-height: 100%;
+  height: 100%;
+  line-height: normal;
+  font-family: Roboto,Helvetica Neue,Arial,sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body{
+  margin: 0;
+}
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+a{
+  text-decoration: none;
+  color: #2196f3;
+}
+
+p {
+  line-height: 1.5;
+}

@@ -1,0 +1,93 @@
+.mat-sidenav-content {
+  position: relative;
+  transform: translate3d(0,0,0);
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
+
+.main-toolbar {
+  background: #fff;
+  padding-right: 0;
+  height: 64px;
+  padding-left: 16px;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+
+.search-wrapper .search-icon {
+  position: absolute;
+  font-size: 24px;
+  top: 6px;
+  left: 24px;
+  transition: color .2s ease;
+}
+.mat-icon {
+  background-repeat: no-repeat;
+  display: inline-block;
+  fill: currentColor;
+  height: 24px;
+  width: 24px;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.search-wrapper input.search-input {
+  display: block;
+  padding: 8px 8px 8px 72px;
+  box-shadow: 0 1px 1.5px rgba(0,0,0,.06), 0 1px 1px rgba(0,0,0,.12);
+  height: 36px;
+  transition: all .2s ease;
+  border: none;
+  font-size: 16px;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+  font-weight: 300;
+  outline: none;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: currentColor;
+  background: rgba(48,52,65,.05);
+  width: 100%;
+}
+
+
+.search-wrapper .search-dropdown {
+  background: #fff;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: -1;
+  -webkit-transform: translateY(-110%);
+  transform: translateY(-110%);
+  visibility: hidden;
+  transition: visibility .4s cubic-bezier(.25,.8,.25,1),-webkit-transform .4s cubic-bezier(.25,.8,.25,1);
+  transition: transform .4s cubic-bezier(.25,.8,.25,1),visibility .4s cubic-bezier(.25,.8,.25,1);
+  transition: transform .4s cubic-bezier(.25,.8,.25,1),visibility .4s cubic-bezier(.25,.8,.25,1),-webkit-transform .4s cubic-bezier(.25,.8,.25,1);
+}
+
+
+.search-wrapper .search-dropdown .content {
+  padding: 16px;
+  font-size: 14px;
+}

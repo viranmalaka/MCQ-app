@@ -2,10 +2,7 @@ import {Component} from "@angular/core";
 
 @Component({
   selector: 'mcq-root',
-  template: `
-    
-    <mcq-navbar></mcq-navbar>
-  `,
+  template: `<router-outlet></router-outlet>`,
   styles: []
 })
 export class AppComponent {

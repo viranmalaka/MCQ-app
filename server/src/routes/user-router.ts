@@ -22,6 +22,8 @@ export class UserRouter {
 		router.use('/teacher', new TeacherRouter().create(router));
 		router.use('/dataentry', new DataEntryRouter().create(router));
 
+		router.get('/:username', UserRouter.getUserProfile);
+
 		return router;
 	}
 
@@ -52,8 +54,8 @@ export class UserRouter {
 			if (err) {
 				return next(err); // will generate a 500 error
 			}
-			if (! user) {
-				return res.send({status : 21, message : 'authentication failed' });
+			if (!user) {
+				return res.send({status: 21, message: 'authentication failed'});
 			}
 			req.login(user, (loginErr: Error) => {
 				if (loginErr) {
@@ -75,6 +77,23 @@ export class UserRouter {
 		})(req, res, next);
 	}
 
+	public static getUserProfile(req: Request, res: Response, next: NextFunction) {
+		if (req.user) {
+			if (req.user.accType === 'A') {
+				// admin
+
+			} else {
+				if (req.user.username === req.params['username']) {
+					//owner
+				} else {
+					// other logged user
+				}
+			}
+		} else {
+			// to guest
+		}
+	};
+
 	public static getToken(id) {
 		let x: object = {
 			id: id,
@@ -89,14 +108,12 @@ export class UserRouter {
 			return next();
 		} else {
 			let user = jwt.verify(req.get('token'), 'secret');
-			new UserController(User).findById(user['id'],'', function (err: Error, doc: IUserModel) {
+			new UserController(User).findById(user['id'], '', function (err: Error, doc: IUserModel) {
 				req.user = doc;
 				return next();
 			})
 		}
 	}
-
-	// endregion
 
 	public static initPassport() {
 		passport.use(new LocalStrategy.Strategy((username, password, done) => {
@@ -131,11 +148,11 @@ export class UserRouter {
 class StudentRouter {
 	private baseRouter: BaseRouter;
 
-	constructor(){
+	constructor() {
 		this.baseRouter = new BaseRouter();
 	}
 
-	public create(router: Router): Router{
+	public create(router: Router): Router {
 		return this.baseRouter.create(router, Student);
 	}
 }
@@ -143,11 +160,11 @@ class StudentRouter {
 class TeacherRouter {
 	private baseRouter: BaseRouter;
 
-	constructor(){
+	constructor() {
 		this.baseRouter = new BaseRouter();
 	}
 
-	public create(router: Router): Router{
+	public create(router: Router): Router {
 		return this.baseRouter.create(router, Teacher);
 	}
 }
@@ -155,11 +172,11 @@ class TeacherRouter {
 class DataEntryRouter {
 	private baseRouter: BaseRouter;
 
-	constructor(){
+	constructor() {
 		this.baseRouter = new BaseRouter();
 	}
 
-	public create(router: Router): Router{
+	public create(router: Router): Router {
 		return this.baseRouter.create(router, DataEntry);
 	}
 }

@@ -9,7 +9,7 @@
 	"item": [
 		{
 			"name": "pre-request",
-			"description": "Collecting initial informations",
+			"description": "Collecting initial information",
 			"item": [
 				{
 					"name": "Test API server",
