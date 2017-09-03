@@ -3,10 +3,10 @@
  */
 
 import {Routes} from "@angular/router";
-import {LoginPageComponent} from "./app-widgets/login-page/login-page.component";
-import {MainLayoutComponent} from "./app-layout/main-layout/main-layout.component";
-import {CreateAccountPageComponent} from "./app-widgets/create-account-page/create-account-page.component";
-import {SocialTestComponent} from "./app-widgets/social-test/social-test.component";
+import {LoginPageComponent} from "./auth/login-page/login-page.component";
+import {MainLayoutComponent} from "./layout/main-layout/main-layout.component";
+import {CreateAccountPageComponent} from "./auth/create-account-page/create-account-page.component";
+import {SocialTestComponent} from "./widgets/social-test/social-test.component";
 
 export const APP_ROUTES : Routes = [
   { path:'login', component: LoginPageComponent },

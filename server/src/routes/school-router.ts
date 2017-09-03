@@ -11,7 +11,8 @@ export class SchoolRouter {
   private static routerConfig: RouterConfig = {
 	  validationRules : SchoolController.rules,
 	  guestActions : {
-	  	r : ['name', 'district']
+	  	r : ['name', 'district'],
+		  count: true
 	  },
 	  otherActions : {
 	  	S : {
@@ -19,18 +20,21 @@ export class SchoolRouter {
 	  		r: ['name', 'district'],
 			  u: ['name'],
 			  d: false,
+			  count: true,
 		  },
 		  T : {
 	  		c: true,
 	  		r: ['name', 'district'],
 			  u: ['name'],
 			  d: false,
+			  count: true,
 		  },
 		  D : {
 	  		c: true,
 	  		r: ['name', 'district'],
 			  u: ['name'],
 			  d: false,
+			  count: true,
 		  },
 
 	  }

@@ -10,6 +10,7 @@ export interface Ability{
 	r?: Array<string>,
 	u?: Array<string>,
 	d?: boolean,
+	count?: boolean,
 }
 
 export interface RouterConfig {
@@ -320,13 +321,15 @@ export class BaseRouter {
 
   private count(type, options: RouterConfig){
   	return (req: Request, res: Response, next: NextFunction) => {
-		  if(req.user ? req.user.accType == 'A' || options.otherActions[req.user.accType].r : options.guestActions.r){
+		  if(req.user ? req.user.accType == 'A' ||
+				  options.otherActions[req.user.accType].count :
+				  options.guestActions.count){
 			  new BaseController(type).count(req.query, (err, count) => {
 				  if(err) return next(err);
 				  res.jsonp({status : 4, count: count});
 			  })
 		  }else{
-			  return next({status : (req.user ? 22 : 21), message : 'No privilege to find', from:'base-router: count'});
+			  return next({status : (req.user ? 22 : 21), message : 'No privilege to get count', from:'base-router: count'});
 		  }
 	  }
   }

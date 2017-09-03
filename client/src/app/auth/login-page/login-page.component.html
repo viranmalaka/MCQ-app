@@ -10,22 +10,21 @@
         <label class="form-control-label">
           Enter your username
         </label>
-        <input type="text" class="form-control" placeholder="username" [formControl]="form.controls['uname']" [ngClass]="{'form-control-danger': form.controls['uname'].hasError('required') && form.controls['uname'].touched}"/>
+        <input type="text" class="form-control" placeholder="username"
+               [formControl]="form.controls['uname']"
+               [ngClass]="{'form-control-danger': form.controls['uname'].hasError('required') && form.controls['uname'].touched}"/>
         <div class="form-control-feedback" *ngIf="form.controls['uname'].hasError('required') && form.controls['uname'].touched">Username is required.</div>
+        <div class="form-control-feedback has-danger" *ngIf="loginFailed && !form.controls['uname'].touched">Invalid Username.</div>
       </fieldset>
       <fieldset class="form-group" [ngClass]="{'has-danger': form.controls['password'].hasError('required') && form.controls['password'].touched}">
         <label class="form-control-label">
           Enter your password
         </label>
-        <input type="password" class="form-control" placeholder="********" [formControl]="form.controls['password']" [ngClass]="{'form-control-danger': form.controls['password'].hasError('required') && form.controls['password'].touched}"/>
+        <input type="password" class="form-control" placeholder="Password" [formControl]="form.controls['password']" [ngClass]="{'form-control-danger': form.controls['password'].hasError('required') && form.controls['password'].touched}"/>
         <div class="form-control-feedback" *ngIf="form.controls['password'].hasError('required') && form.controls['password'].touched">Password is required.</div>
+        <div class="form-control-feedback has-danger" *ngIf="loginFailed && !form.controls['password'].touched">Invalid password</div>
         <a [routerLink]="['/authentication/forgot']" class="form-text"><small>Recover password</small></a>
       </fieldset>
-      <label class="custom-control custom-checkbox mb-3">
-        <input type="checkbox" class="custom-control-input">
-        <span class="custom-control-indicator"></span>
-        <span class="custom-control-description">Stay logged in</span>
-      </label>
       <div class="block"></div>
       <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Login</button>
       <a class="btn btn-outline-primary btn-link" [routerLink]="['/signup']">Create an account!</a>

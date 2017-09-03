@@ -8,12 +8,12 @@ import * as bcryptjs from "bcryptjs";
 
 export class UserController extends BaseController {
 
-	public modelValidator(date: IUser): any {
-		return null;
-	}
+	public static rules = {
+
+	};
 
 	public createUser(data: IUser, next) {
-		let valErrors = this.modelValidator(data);
+		let valErrors = super.modelValidator(data, UserController.rules);
 		if (valErrors) {           // check for any validation errors
 			return next({value: valErrors});
 		} else {

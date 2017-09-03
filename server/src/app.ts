@@ -4,6 +4,7 @@
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as express from "express";
+import {NextFunction, Request, Response} from "express";
 import * as logger from "morgan";
 import * as path from "path";
 import * as fs from "fs";
@@ -84,6 +85,9 @@ export class Server {
    * @method config
    */
   public config() {
+  	// add cors handler
+	  this.app.use(Server.corsEnableMiddleware);
+
     //add static paths
     this.app.use(express.static(path.join(__dirname, "public")));
 
@@ -141,4 +145,12 @@ export class Server {
       });
     });
   }
+
+
+  private static corsEnableMiddleware(req: Request, res: Response, next: NextFunction) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  }
+
 }

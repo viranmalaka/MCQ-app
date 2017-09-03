@@ -4,7 +4,7 @@ import * as LocalStrategy from "passport-local";
 import * as jwt from "jsonwebtoken";
 import {UserController} from "../controllers/user-controller";
 import {DataEntry, IUserModel, Student, Teacher, User} from "../models/User";
-import {BaseRouter} from "./base-router";
+import {BaseRouter, RouterConfig} from "./base-router";
 
 /**
  * Created by MalakaD on 7/26/2017.
@@ -12,8 +12,44 @@ import {BaseRouter} from "./base-router";
 
 export class UserRouter {
 
+	private baseRouter: BaseRouter;
+
+	private static routerConfig: RouterConfig = {
+		validationRules : UserController.rules,
+		guestActions : {
+			count: true,
+		},
+		otherActions : {
+			S : {
+				c: true,
+				r: ['name', 'district'],
+				u: ['name'],
+				d: false,
+			},
+			T : {
+				c: true,
+				r: ['name', 'district'],
+				u: ['name'],
+				d: false,
+			},
+			D : {
+				c: true,
+				r: ['name', 'district'],
+				u: ['name'],
+				d: false,
+			},
+
+		}
+	};
+
+	constructor (){
+		this.baseRouter = new BaseRouter();
+	}
+
 	public create(): Router {
 		let router: Router = Router();
+
+		this.baseRouter.create(router, User, UserRouter.routerConfig);
 
 		router.post('/signup', UserRouter.signup);
 		router.post('/login', UserRouter.login);
@@ -21,8 +57,6 @@ export class UserRouter {
 		router.use('/student', new StudentRouter().create(router));
 		router.use('/teacher', new TeacherRouter().create(router));
 		router.use('/dataentry', new DataEntryRouter().create(router));
-
-		router.get('/:username', UserRouter.getUserProfile);
 
 		return router;
 	}
@@ -71,28 +105,11 @@ export class UserRouter {
 						profilePicture: req.user.profilePicture
 					},
 					token: UserRouter.getToken(user._id),
-					success: 1
+					status: 1
 				});
 			});
 		})(req, res, next);
 	}
-
-	public static getUserProfile(req: Request, res: Response, next: NextFunction) {
-		if (req.user) {
-			if (req.user.accType === 'A') {
-				// admin
-
-			} else {
-				if (req.user.username === req.params['username']) {
-					//owner
-				} else {
-					// other logged user
-				}
-			}
-		} else {
-			// to guest
-		}
-	};
 
 	public static getToken(id) {
 		let x: object = {
