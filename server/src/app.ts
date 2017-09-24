@@ -86,7 +86,7 @@ export class Server {
    */
   public config() {
   	// add cors handler
-	  this.app.use(Server.corsEnableMiddleware);
+	  // this.app.use(Server.corsEnableMiddleware);
 
     //add static paths
     this.app.use(express.static(path.join(__dirname, "public")));

@@ -27,7 +27,7 @@ export class LoginPageComponent implements OnInit {
       const userState = UserState.getInstance();
       userState.user = data.user;
       userState.token = data.token;
-      this.router.navigate(['dash', 'social']);
+      this.router.navigate([data.user.username]);
     }).catch(err => {
       this.form.reset();
       this.loginFailed = true;

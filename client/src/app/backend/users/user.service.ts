@@ -4,7 +4,8 @@
 
 import {Injectable} from "@angular/core";
 import {environment} from "../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {UserState} from "./user-state";
 
 
 @Injectable()
@@ -73,6 +74,26 @@ export class UserService {
         }
       });
     });
+  }
 
+  public getUser(path: string, params: any, success: number, addToken: boolean = true): Promise<any> {
+    let headers = new HttpHeaders();
+    let httpParams = new HttpParams();
+    Object.keys(params).forEach(val => {
+      httpParams = httpParams.append(val, params[val]);
+    });
+    if(addToken){
+      headers = headers.append('token', UserState.getInstance().token);
+    }
+    console.log(headers);
+    return new Promise((resolve, reject) => {
+      this.http.get(this.userDomain + path, { params: httpParams, headers: headers}).subscribe(data => {
+        if(data['status'] == success) {
+          resolve(data);
+        } else {
+          reject(data);
+        }
+      })
+    });
   }
 }

@@ -12,6 +12,7 @@ export class PaperRouter {
 	// ['alias', 'name', 'medium', 'subject',	'timeLimit', 'unitMark', 'questions',
 	// 'finished',	'choicesCount', 'questionMix', 'addedBy',	'description', 'isPastPaper']
 	private static routerConfig: RouterConfig = {
+		modelName: 'Paper',
     validationRules : PaperController.rules,
     guestActions : {
       r : ['alias', 'name', 'medium', 'subject',	'timeLimit', 'questions',

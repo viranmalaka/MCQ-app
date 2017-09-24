@@ -14,7 +14,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgbModule, NgbProgressbarModule, NgbTabsetModule} from "@ng-bootstrap/ng-bootstrap";
 import {SidebarModule} from "ng-sidebar";
 import {MenuItems} from "./layout/main-layout/menu-items";
-import {SocialTestComponent} from "./widgets/social-test/social-test.component";
+import {UserProfileComponent} from "./auth/user-profile/user-profile.component";
 import {HttpClientModule} from "@angular/common/http";
 import {UserService} from "./backend/users/user.service";
 
@@ -26,7 +26,7 @@ import {UserService} from "./backend/users/user.service";
     MainContainerComponent,
     LoginPageComponent,
     CreateAccountPageComponent,
-    SocialTestComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -14,6 +14,7 @@ export interface Ability{
 }
 
 export interface RouterConfig {
+	modelName: string,
 	ownerShip?: string,
 	validationRules: any,
 	ownerActions?: Ability,
@@ -87,7 +88,7 @@ export class BaseRouter {
 							      res.jsonp({status: 4, result: responseObj});
 						      } else {
 							      // error
-							      return next({status : 22, message : 'No privilege to read', from:'base-router: find'});
+							      return next({status : 22, message : 'No privilege to read : ' + user.username, from:'base-router: find'});
 						      }
 					      }
 				      });
@@ -102,12 +103,12 @@ export class BaseRouter {
 						      // owner
 						      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.ownerActions.r), resultGenFunction)
 					      } else {
-						      // others
+						      // others
 						      if (options.otherActions[accType].r) {
 							      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), resultGenFunction)
 						      }else{
 						      	// error
-							      return next({status : 22, message : 'No privilege to read', from:'base-router: find'});
+							      return next({status : 22, message : 'No privilege to read : ' + user.username, from:'base-router: find'});
 						      }
 					      }
 				      } else {
@@ -117,7 +118,7 @@ export class BaseRouter {
 						      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.otherActions[accType].r), resultGenFunction)
 					      }else{
 					      	// error
-						      return next({status : 22, message : 'No privilege to read', from:'base-router: find'});
+						      return next({status : 22, message : 'No privilege to read : ' + user.username, from:'base-router: find'});
 					      }
 				      }
 			      }
@@ -132,7 +133,7 @@ export class BaseRouter {
 				      }
 			      } else {
 			      	// error
-							return next({status : 22, message : 'No privilege to read', from:'base-router: find'});
+							return next({status : 22, message : 'No privilege to read : ' + user.username, from:'base-router: find'});
 			      }
 		      }
 	      }
@@ -146,7 +147,7 @@ export class BaseRouter {
 		      }
 	      } else {
 		      //error
-		      return next({status : 21, message : 'No privilege to read', from:'base-router: find'});
+		      return next({status : 21, message : 'No privilege to read : guest', from:'base-router: find'});
 	      }
       }
     }.bind(this);
@@ -185,14 +186,14 @@ export class BaseRouter {
 	    		if(options.otherActions[req.user.accType].c){
 						return addFunction();
 			    }else{
-				    return next({status : 22, message : 'No privilege to create', from:'base-router: add'});
+				    return next({status : 22, message : 'No privilege to create : ' + req.user.username, from:'base-router: add'});
 			    }
 		    }
 	    } else {
 	    	if(options.guestActions.c){
 			    return addFunction();
 		    }else{
-			    return next({status : 21, message : 'No privilege to create', from:'base-router: add'});
+			    return next({status : 21, message : 'No privilege to create: guest', from:'base-router: add'});
 		    }
 	    }
     }
@@ -214,7 +215,7 @@ export class BaseRouter {
 				        return res.jsonp({status: 3, result: result});
 			        });
 		        } else {
-		        	return next({status: 22, message: 'No privilege to update', from:'base-router: update'})
+		        	return next({status: 22, message: 'No privilege to update : ' + req.user.username, from:'base-router: update'})
 		        }
 	        }else{
 	        	return next({status: 14, message: 'No such object', from:'base-router: update'})
@@ -236,17 +237,17 @@ export class BaseRouter {
 			  if (req.user.accType == 'A') {
 				  editFunction(options.ownerActions ? options.ownerActions.u: []);
 			  } else {
-				  if (options.otherActions[req.user.accType]) {
+				  if (options.otherActions[req.user.accType].u) {
 					  editFunction(options.otherActions[req.user.accType].u);
 				  } else {
-				  	return next({status: 22, message:'No privilege to edit', from:'base-router: edit'})
+				  	return next({status: 22, message:'No privilege to edit : ' + req.user.username, from:'base-router: edit'})
 				  }
 			  }
 		  } else {
 			  if (options.guestActions) {
 				  editFunction(options.guestActions.u);
 			  } else {
-				  return next({status: 21, message:'No privilege to edit', from:'base-router: edit'})
+				  return next({status: 21, message:'No privilege to edit : guest', from:'base-router: edit'})
 			  }
 		  }
 	  };
@@ -278,7 +279,7 @@ export class BaseRouter {
 							      res.jsonp({status: 5, result: doc});
 						      })
 					      } else {
-						      return next({status: 22, message: 'No privilege to delete', from:'base-router: remove'});
+						      return next({status: 22, message: 'No privilege to delete : ' + req.user.username, from:'base-router: remove'});
 					      }
 				      } else {
 					      if (options.otherActions[req.user.accType].d) {
@@ -290,7 +291,7 @@ export class BaseRouter {
 							      res.jsonp({status: 5, result: doc});
 						      })
 					      } else {
-						      return next({status: 22, message: 'No privilege to delete', from:'base-router: remove'});
+						      return next({status: 22, message: 'No privilege to delete : ' + req.user.username, from:'base-router: remove'});
 					      }
 				      }
 			      } else {
@@ -310,10 +311,10 @@ export class BaseRouter {
 				      res.jsonp({status:5, result: doc});
 			      });
 		      }else{
-			      return next({status: 21, message: 'No privilege to delete', from:'base-router: remove'});
+			      return next({status: 21, message: 'No privilege to delete : guest', from:'base-router: remove'});
 		      }
 	      }else{
-		      return next({status: 21, message: 'No privilege to delete', from:'base-router: remove'});
+		      return next({status: 21, message: 'No privilege to delete : guest', from:'base-router: remove'});
 	      }
       }
     }

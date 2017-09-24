@@ -105,6 +105,70 @@
 						"description": ""
 					},
 					"response": []
+				},
+				{
+					"name": "Student Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"response has token\"] = ",
+									"    _.has(jsonData, 'token');",
+									"tests[\"response has user object\"] = ",
+									"    _.has(jsonData, 'user');",
+									"tests['user is ' + pm.globals.get('var1')] = ",
+									"    _.isEqual(jsonData.user.username, pm.globals.get('var1'));",
+									"",
+									"pm.globals.set(\"student_token\", jsonData.token);   // save to "
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.set('var1', pm.environment.get('student_username'));",
+									"pm.globals.set('var2', pm.environment.get('student_password'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{domain}}user/login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{var1}}",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{var2}}",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
 				}
 			]
 		},
@@ -2494,6 +2558,2438 @@
 					"_postman_isSubFolder": true
 				}
 			]
+		},
+		{
+			"name": "student",
+			"description": "",
+			"item": [
+				{
+					"name": "school",
+					"description": "",
+					"item": [
+						{
+							"name": "Add School",
+							"description": "",
+							"item": [
+								{
+									"name": "Add school: Successful",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 2\"] = ",
+													"    _.isEqual(jsonData.status, 2);",
+													"tests[\"result should not null\"] = ",
+													"    _.has(jsonData, 'result');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.result.name, pm.globals.get(\"var1\"));",
+													"tests[\"checking district\"] = ",
+													"    _.isEqual(jsonData.result.district, pm.globals.get(\"var2\"));",
+													"",
+													"// set this added object to update in future",
+													"pm.environment.set(\"update_school_id\", jsonData.result._id);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set('var1', pm.environment.get('add_school_name'));",
+													"pm.globals.set('var2', pm.environment.get('add_school_district'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school",
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "Send a successful request. both name and district is correct"
+									},
+									"response": []
+								},
+								{
+									"name": "Add school: Error",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = ",
+													"    responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"the error from the district\"] =",
+													"    _.has(jsonData.msg, \"district\");",
+													"tests[\"Inner state should be validation error\"] = ",
+													"    _.isEqual(jsonData.status, 16);"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school",
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											},
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"description": "send an empty request. No name and district fields"
+									},
+									"response": []
+								},
+								{
+									"name": "Add school: Error - (Validation: empty name)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.name.value, pm.globals.get(\"var1\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.name.message);",
+													"tests['should have two errors on name'] =",
+													"    _.isEqual(jsonData.msg.name.message.length, 2);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"\");",
+													"pm.globals.set(\"var2\", \"Ampara\");"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school",
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "Check validations of name\n\tname empty"
+									},
+									"response": []
+								},
+								{
+									"name": "Add school: Error - (Validation: invalid name)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.name.value, pm.globals.get(\"var1\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.name.message);",
+													"tests['should have one error on name'] =",
+													"    _.isEqual(jsonData.msg.name.message.length, 1);",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"name##\");",
+													"pm.globals.set(\"var2\", \"Ampara\");"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school",
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of name\n\tinvalid (name##)"
+									},
+									"response": []
+								},
+								{
+									"name": "Add school: Error - (Validation: invalid name)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.name.value, pm.globals.get(\"var1\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.name.message);",
+													"tests['should have one error on name'] =",
+													"    _.isEqual(jsonData.msg.name.message.length, 1);",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"name@@\");",
+													"pm.globals.set(\"var2\", \"Ampara\");"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school",
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of name\n\tinvalid (name@@)"
+									},
+									"response": []
+								},
+								{
+									"name": "Add school: Error - (Validation: emtpy district)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.district.value, pm.globals.get(\"var2\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.district.message);",
+													"tests['should have two errors on district'] =",
+													"    _.isEqual(jsonData.msg.district.message.length, 2);",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"Sir/razik Fareed Muslim Maha Vidiyalaya, (MMV)\");",
+													"pm.globals.set(\"var2\", \"\");"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school",
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of district\n\tempty"
+									},
+									"response": []
+								},
+								{
+									"name": "Add school: Error - (Validation: invalid district)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking district\"] = ",
+													"    _.isEqual(jsonData.msg.district.value, pm.globals.get(\"var2\"));",
+													"tests[\"checking district error message\"] = ",
+													"    _.isArray(jsonData.msg.district.message);",
+													"tests['should have one errors on district'] =",
+													"    _.isEqual(jsonData.msg.district.message.length, 1);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"Sir/razik Fareed Muslim Maha Vidiyalaya, (MMV)\");",
+													"pm.globals.set(\"var2\", \"test\");"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school",
+										"method": "POST",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of district\n\tout of the array"
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Update School",
+							"description": "",
+							"item": [
+								{
+									"name": "Update School: Successful",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"inner state is 3\"] = ",
+													"        _.isEqual(jsonData.status, 3);",
+													"tests[\"result should be there\"] = ",
+													"        _.has(jsonData, 'result');",
+													"tests[\"check new school name\"] = ",
+													"        _.has(jsonData.result, 'name');",
+													"tests[\"check new district\"] = ",
+													"        _.has(jsonData.result, 'district');"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"edit-edit\");",
+													"pm.globals.set(\"var2\", \"Gampaha\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}/edit",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "correct update request"
+									},
+									"response": []
+								},
+								{
+									"name": "Update School: Error",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"inner state is 16\"] = ",
+													"        _.isEqual(jsonData.status, 16);",
+													"tests[\"result should not be there\"] = ",
+													"        _.has(jsonData, 'msg');"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}/edit",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {},
+										"description": "correct update request"
+									},
+									"response": []
+								},
+								{
+									"name": "Update School: Error - (Validation: empty name)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"inner state is 16\"] = ",
+													"        _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should be there\"] = ",
+													"        _.has(jsonData, 'msg');"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"\");",
+													"pm.globals.set(\"var2\", \"Gampaha\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}/edit",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "correct update request"
+									},
+									"response": []
+								},
+								{
+									"name": "Update school: Error - (Validation: invalid name)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.name.value, pm.globals.get(\"var1\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.name.message);",
+													"tests['one error on name'] = ",
+													"    _.isEqual(jsonData.msg.name.message.length, 1);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"name##\");",
+													"pm.globals.set(\"var2\", \"Ampara\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}/edit",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of name\n\tinvalid (name##)"
+									},
+									"response": []
+								},
+								{
+									"name": "Update school: Error - (Validation: emtpy district)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.district.value, pm.globals.get(\"var2\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.district.message);",
+													"tests['two errors on district'] = ",
+													"    _.isEqual(jsonData.msg.district.message.length, 2);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"Sir/razik Fareed Muslim Maha Vidiyalaya, (MMV)\");",
+													"pm.globals.set(\"var2\", \"\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}/edit",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of district\n\tempty"
+									},
+									"response": []
+								},
+								{
+									"name": "Update school: Error - (Validation: invalid district)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.district.value, pm.globals.get(\"var2\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.district.message);",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"Sir/razik Fareed Muslim Maha Vidiyalaya, (MMV)\");",
+													"pm.globals.set(\"var2\", \"test\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}/edit",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of district\n\tout of the array"
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Edit School",
+							"description": "",
+							"item": [
+								{
+									"name": "Edit School: Successful",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"inner state is 3\"] = ",
+													"        _.isEqual(jsonData.status, 3);",
+													"tests[\"result should be there\"] = ",
+													"        _.has(jsonData, 'result');",
+													"tests[\"check new school name\"] = ",
+													"        _.isEqual(jsonData.result.name, pm.globals.get(\"var1\"));",
+													"tests[\"check new district name\"] = ",
+													"        _.isEqual(jsonData.result.district, pm.globals.get(\"var2\"));"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"edit-edit\");",
+													"pm.globals.set(\"var2\", \"Gampaha\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "correct update request"
+									},
+									"response": []
+								},
+								{
+									"name": "Edit School: Error",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"inner state is 16\"] = ",
+													"        _.isEqual(jsonData.status, 16);",
+													"tests[\"result should be there\"] = ",
+													"        _.has(jsonData, 'msg');"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {},
+										"description": "correct update request"
+									},
+									"response": []
+								},
+								{
+									"name": "Edit School: Error - (Validation: empty name)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"inner state is 16\"] = ",
+													"        _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should be there\"] = ",
+													"        _.has(jsonData, 'msg');",
+													"tests[\"validation error on name\"] = ",
+													"        _.has(jsonData.msg, 'name');",
+													"        ",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.name.value, pm.globals.get(\"var1\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.name.message);",
+													"tests['one error on name'] = ",
+													"    _.isEqual(jsonData.msg.name.message.length, 2);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"\");",
+													"pm.globals.set(\"var2\", \"Moneragala\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "correct update request"
+									},
+									"response": []
+								},
+								{
+									"name": "Edit school: Error - (Validation: invalid name)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = jsonData.status === 16;",
+													"tests[\"msg should not null\"] = jsonData.msg !== undefined;",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.name.value, pm.globals.get(\"var1\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.name.message);",
+													"tests['one error on name'] = ",
+													"    _.isEqual(jsonData.msg.name.message.length, 1);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"name##\");",
+													"pm.globals.set(\"var2\", \"Ampara\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of name\n\tinvalid (name##)"
+									},
+									"response": []
+								},
+								{
+									"name": "Edit school: Error - (Validation: emtpy district)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.district.value, pm.globals.get(\"var2\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.district.message);",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"Sir/razik Fareed Muslim Maha Vidiyalaya, (MMV)\");",
+													"pm.globals.set(\"var2\", \"\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of district\n\tempty"
+									},
+									"response": []
+								},
+								{
+									"name": "Edit school: Error - (Validation: invalid district)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 16\"] = ",
+													"    _.isEqual(jsonData.status, 16);",
+													"tests[\"msg should not null\"] = ",
+													"    _.has(jsonData, 'msg');",
+													"",
+													"tests[\"checking name\"] = ",
+													"    _.isEqual(jsonData.msg.district.value, pm.globals.get(\"var2\"));",
+													"tests[\"checking name error message\"] = ",
+													"    _.isArray(jsonData.msg.district.message);",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", \"Sir/razik Fareed Muslim Maha Vidiyalaya, (MMV)\");",
+													"pm.globals.set(\"var2\", \"test\");",
+													"pm.globals.set(\"var3\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var3}}",
+										"method": "PUT",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"description": ""
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "{{var1}}",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "district",
+													"value": "{{var2}}",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"description": "checking validations of district\n\tout of the array"
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Find School",
+							"description": "",
+							"item": [
+								{
+									"name": "Find all and check select, sort",
+									"description": "",
+									"item": [
+										{
+											"name": "Find: All schools: success",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] =",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects have _id field\"] =",
+															"        _.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects have name field\"] =",
+															"        _.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects have district field\"] =",
+															"        _.has(jsonData.result[0], 'district');    ",
+															"}",
+															""
+														]
+													}
+												}
+											],
+											"request": {
+												"url": "{{domain}}school",
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										},
+										{
+											"name": "Find schools: success with select name",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects have _id field\"] =",
+															"        _.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects have name field\"] =",
+															"        _.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects have not district field\"] =",
+															"        !_.has(jsonData.result[0], 'district');    ",
+															"}"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_select=name",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_select",
+															"value": "name",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "find schools with selecting fields"
+											},
+											"response": []
+										},
+										{
+											"name": "Find schools: success with select (-name)",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects have _id field\"] =",
+															"        _.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects not have name field\"] =",
+															"        !_.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects have district field\"] =",
+															"        _.has(jsonData.result[0], 'district');    ",
+															"}"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_select=-name",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_select",
+															"value": "-name",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "find schools with selecting fields"
+											},
+											"response": []
+										},
+										{
+											"name": "Find schools: success with select name (-_id)",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects not have _id field\"] =",
+															"        !_.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects have name field\"] =",
+															"        _.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects nothave district field\"] =",
+															"        !_.has(jsonData.result[0], 'district');    ",
+															"}"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_select=-_id,name",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_select",
+															"value": "-_id,name",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "find schools with selecting fields"
+											},
+											"response": []
+										},
+										{
+											"name": "Find schools: success with select (-name & -_id)",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects not have _id field\"] =",
+															"        !_.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects not have name field\"] =",
+															"        !_.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects have district field\"] =",
+															"        _.has(jsonData.result[0], 'district');    ",
+															"}"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_select=-name,-_id",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_select",
+															"value": "-name,-_id",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "find schools with selecting fields"
+											},
+											"response": []
+										},
+										{
+											"name": "Find: All schools: success with sort by district",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"tests['check sort'] = ",
+															"    _.isEqual(_.chain(jsonData.result).sortBy('district'), jsonData.result); "
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_sort=district",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_sort",
+															"value": "district",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										},
+										{
+											"name": "Find: All schools: success with sort by name",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"tests['check sort'] = ",
+															"    _.isEqual(_.chain(jsonData.result).sortBy('name'), jsonData.result); "
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_sort=name",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_sort",
+															"value": "name",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										},
+										{
+											"name": "Find: All schools: success with sort by -district",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"tests['check sort'] = ",
+															"    _.isEqual(_.chain(jsonData.result).sortBy('district'), _(jsonData.result).reverse().value()); "
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_sort=-district",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_sort",
+															"value": "-district",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										},
+										{
+											"name": "Find: All schools: success with sort by -name",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"tests['check sort'] = ",
+															"    _.isEqual(_.chain(jsonData.result).sortBy('name'), _(jsonData.result).reverse().value()); "
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_sort=-name",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_sort",
+															"value": "-name",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										}
+									],
+									"_postman_isSubFolder": true
+								},
+								{
+									"name": "Find by queries and _id",
+									"description": "",
+									"item": [
+										{
+											"name": "Find: All schools: query with district",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects have _id field\"] =",
+															"        _.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects have name field\"] =",
+															"        _.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects have district field\"] =",
+															"        _.has(jsonData.result[0], 'district');    ",
+															"}",
+															""
+														]
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"pm.globals.set(\"var1\", pm.environment.get('find_school_searchBy_district'));"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?district={{var1}}",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "district",
+															"value": "{{var1}}",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										},
+										{
+											"name": "Find: All schools: query with name",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"tests[\"check result has non-empty array\"] = ",
+															"    _.gt(jsonData.result.length, 0);",
+															"    ",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects have _id field\"] =",
+															"        _.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects have name field\"] =",
+															"        _.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects have district field\"] =",
+															"        _.has(jsonData.result[0], 'district');    ",
+															"}",
+															""
+														]
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"pm.globals.set(\"var1\", pm.environment.get('find_school_searchBy_name'));"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?name={{var1}}",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "name",
+															"value": "{{var1}}",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										},
+										{
+											"name": "Find: All schools: query with _id",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check result is an object\"] =",
+															"    !_.isArray(jsonData.result) && _.isObject(jsonData.result);",
+															"    ",
+															"if(jsonData.result){",
+															"    tests[\"check return objects have _id field\"] =",
+															"        _.has(jsonData.result, '_id');",
+															"    tests[\"check return objects have name field\"] =",
+															"        _.has(jsonData.result, 'name');",
+															"    tests[\"check return objects have district field\"] =",
+															"        _.has(jsonData.result, 'district');    ",
+															"}",
+															""
+														]
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"pm.globals.set(\"var1\", pm.environment.get('update_school_id'));"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_id={{var1}}",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_id",
+															"value": "{{var1}}",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										}
+									],
+									"_postman_isSubFolder": true
+								},
+								{
+									"name": "Complex Search ",
+									"description": "",
+									"item": [
+										{
+											"name": "Search districts only and sorted",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check result is an array\"] =",
+															"    _.isArray(jsonData.result);",
+															"    ",
+															"if(jsonData.result.length > 0){",
+															"    tests[\"check return objects not have _id field\"] =",
+															"        !_.has(jsonData.result[0], '_id');",
+															"    tests[\"check return objects not have name field\"] =",
+															"        !_.has(jsonData.result[0], 'name');",
+															"    tests[\"check return objects have district field\"] =",
+															"        _.has(jsonData.result[0], 'district');    ",
+															"}",
+															"",
+															"tests['check sort'] = ",
+															"    _.isEqual(_.chain(jsonData.result).sortBy('district'), jsonData.result); ",
+															"    "
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_select=-name,-_id&_sort=district",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_select",
+															"value": "-name,-_id",
+															"equals": true,
+															"description": ""
+														},
+														{
+															"key": "_sort",
+															"value": "district",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [],
+												"body": {},
+												"description": ""
+											},
+											"response": []
+										},
+										{
+											"name": "Search by _id and get only name",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check result is an array\"] =",
+															"    !_.isArray(jsonData.result) && _.isObject(jsonData.result);",
+															"    ",
+															"if(jsonData.result){",
+															"    tests[\"check return objects not have _id field\"] =",
+															"        !_.has(jsonData.result, '_id');",
+															"    tests[\"check return objects have name field\"] =",
+															"        _.has(jsonData.result, 'name');",
+															"    tests[\"check return objects not have district field\"] =",
+															"        !_.has(jsonData.result, 'district');    ",
+															"}"
+														]
+													}
+												},
+												{
+													"listen": "prerequest",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"pm.globals.set(\"var1\", pm.environment.get('update_school_id'));"
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school?_id={{var1}}&_select=name,-_id",
+													"host": [
+														"{{domain}}school"
+													],
+													"query": [
+														{
+															"key": "_id",
+															"value": "{{var1}}",
+															"equals": true,
+															"description": ""
+														},
+														{
+															"key": "_select",
+															"value": "name,-_id",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [],
+												"body": {},
+												"description": ""
+											},
+											"response": []
+										},
+										{
+											"name": "Count: All School",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"var _ = require(\"lodash\");",
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check count\"] =",
+															"    _.isNumber(jsonData.count)",
+															""
+														]
+													}
+												}
+											],
+											"request": {
+												"url": "{{domain}}school/count",
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										},
+										{
+											"name": "Count: School with query",
+											"event": [
+												{
+													"listen": "test",
+													"script": {
+														"type": "text/javascript",
+														"exec": [
+															"var _ = require(\"lodash\");",
+															"tests[\"Status code is 200\"] = responseCode.code === 200;",
+															"",
+															"var jsonData = JSON.parse(responseBody);",
+															"tests[\"inner status should be 4\"] = ",
+															"    _.isEqual(jsonData.status, 4);",
+															"",
+															"tests[\"check count\"] =",
+															"    _.isNumber(jsonData.count)",
+															""
+														]
+													}
+												}
+											],
+											"request": {
+												"url": {
+													"raw": "{{domain}}school/count?district=Kalutara",
+													"host": [
+														"{{domain}}school"
+													],
+													"path": [
+														"count"
+													],
+													"query": [
+														{
+															"key": "district",
+															"value": "Kalutara",
+															"equals": true,
+															"description": ""
+														}
+													],
+													"variable": []
+												},
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}",
+														"description": ""
+													}
+												],
+												"body": {},
+												"description": "send success request for get all schools"
+											},
+											"response": []
+										}
+									],
+									"_postman_isSubFolder": true
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Remove School",
+							"description": "",
+							"item": [
+								{
+									"name": "Delete added school",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 5\"] = ",
+													"    _.isEqual(jsonData.status, 5);",
+													"tests[\"result should not null\"] = ",
+													"    _.has(jsonData, 'result');",
+													"",
+													"tests[\"checking _id\"] = ",
+													"    jsonData.result._id === pm.globals.get(\"var1\");"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var1}}",
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											}
+										],
+										"body": {},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Delete same object again",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"var jsonData = JSON.parse(responseBody);",
+													"tests[\"inner status should be 14\"] = ",
+													"    _.isEqual(jsonData.status, 14);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set(\"var1\", pm.environment.get('update_school_id'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"url": "{{domain}}school/{{var1}}",
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}",
+												"description": ""
+											}
+										],
+										"body": {},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "Test Signup",
+			"request": {
+				"url": "{{domain}}user/signup",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "admin",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "admin@test.com",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "accType",
+							"value": "s",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

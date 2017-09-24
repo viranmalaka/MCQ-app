@@ -30,6 +30,7 @@ export class UserController extends BaseController {
 						if (err) return next(err);
 						if (user.accType == 'S') {
 							let thisStudent = new Student();
+							thisStudent['parent'] = user._id;
 							return thisStudent.save((err, std) => {
 								if (err) return next(err);
 								user.accId = std._id;
@@ -37,6 +38,7 @@ export class UserController extends BaseController {
 							})
 						} else if (user.accType == 'T') {
 							let thisTeacher = new Teacher();
+							thisTeacher['parent'] = user._id;
 							thisTeacher.save((err, tch) => {
 								if (err) return next(err);
 								user.accId = tch._id;
@@ -44,6 +46,7 @@ export class UserController extends BaseController {
 							})
 						} else if (user.accType == "D") {
 							let thisDataEntry = new DataEntry();
+							thisDataEntry['parent'] = user._id;
 							thisDataEntry.save((err, de) => {
 								if (err) return next(err);
 								user.accId = de._id;

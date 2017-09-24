@@ -26,7 +26,7 @@
     <!-- main navigation -->
     <nav class="menu">
       <ul class="navigation" appAccordion>
-        <li class="navigation-item" appAccordionLink *ngFor="let menuitem of menuItems.getAll()">
+        <li class="navigation-item" appAccordionLink *ngFor="let menuitem of menuItems.getAll()">  <!--group="{{menuitem.state}}"-->
           <a class="navigation-link" appAccordionToggle [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
             <i class="icon icon-{{ menuitem.icon }}"></i>
             <span>{{ menuitem.name }}</span>
@@ -54,7 +54,7 @@
           </a>
           <ul class="navigation-submenu" *ngIf="menuitem.type === 'sub'">
             <li class="navigation-item" *ngFor="let childitem of menuitem.children" routerLinkActive="open">
-              <a [routerLink]="['/', menuitem.state, childitem.state ]" class="navigation-link relative">{{ childitem.name}}</a>
+              <a [routerLink]="['/', menuitem.state, childitem.state ]" class="navigation-link relative">{{ childitem.name }}</a>
             </li>
           </ul>
         </li>
@@ -175,7 +175,6 @@
 
 </ng-sidebar-container>
 
-
 <!--<ng-template #search let-c="close" let-d="dismiss">-->
   <!--<form class="search__form" action="">-->
     <!--<input class="search-input" name="search" type="search" placeholder="Search..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus="true" />-->
@@ -255,11 +254,11 @@
       <!--</div>-->
 
       <!--<small class="ff-headers text-uppercase mb-3"><strong>Select A Language</strong></small>-->
-      <!--<div class="d-flex align-items-center">-->
-        <!--<select class="custom-select" [(ngModel)]="currentLang" #langSelect="ngModel" (ngModelChange)="translate.use(currentLang)" placeholder="Select language" style="min-width: 50%;">-->
-          <!--<option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</option>-->
-        <!--</select>-->
-      <!--</div>-->
+      <!--&lt;!&ndash;<div class="d-flex align-items-center">&ndash;&gt;-->
+        <!--&lt;!&ndash;<select class="custom-select" [(ngModel)]="currentLang" #langSelect="ngModel" (ngModelChange)="translate.use(currentLang)" placeholder="Select language" style="min-width: 50%;">&ndash;&gt;-->
+          <!--&lt;!&ndash;<option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</option>&ndash;&gt;-->
+        <!--&lt;!&ndash;</select>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
     <!--</div>-->
   <!--</div>-->
 <!--</div>-->

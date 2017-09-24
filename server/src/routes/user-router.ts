@@ -15,6 +15,7 @@ export class UserRouter {
 	private baseRouter: BaseRouter;
 
 	private static routerConfig: RouterConfig = {
+		modelName: 'User',
 		validationRules : UserController.rules,
 		guestActions : {
 			count: true,
@@ -42,6 +43,7 @@ export class UserRouter {
 		}
 	};
 
+
 	constructor (){
 		this.baseRouter = new BaseRouter();
 	}
@@ -54,9 +56,9 @@ export class UserRouter {
 		router.post('/signup', UserRouter.signup);
 		router.post('/login', UserRouter.login);
 
-		router.use('/student', new StudentRouter().create(router));
-		router.use('/teacher', new TeacherRouter().create(router));
-		router.use('/dataentry', new DataEntryRouter().create(router));
+		router.use('/sub/student', new StudentRouter().create());
+		router.use('/sub/teacher', new TeacherRouter().create(router));
+		router.use('/sub/dataentry', new DataEntryRouter().create(router));
 
 		return router;
 	}
@@ -164,13 +166,48 @@ export class UserRouter {
 
 class StudentRouter {
 	private baseRouter: BaseRouter;
+	private static studentRouterConfig: RouterConfig = {
+		modelName: 'Student',
+		validationRules : UserController.rules,
+		ownerShip: 'parent',
+		guestActions : {
+			count: false,
+		},
+		ownerActions : {
+			count: true,
+			d: true,
+		},
+		otherActions : {
+			S : {
+				c: true,
+				r: ['name', 'district'],
+				u: ['name'],
+				d: false,
+			},
+			T : {
+				c: true,
+				r: ['name', 'district'],
+				u: ['name'],
+				d: false,
+			},
+			D : {
+				c: true,
+				r: ['name', 'district'],
+				u: ['name'],
+				d: false,
+			},
+
+		}
+	};
 
 	constructor() {
 		this.baseRouter = new BaseRouter();
 	}
 
-	public create(router: Router): Router {
-		return this.baseRouter.create(router, Student);
+	public create(): Router {
+		let router: Router = Router();
+
+		return this.baseRouter.create(router, Student, StudentRouter.studentRouterConfig);
 	}
 }
 

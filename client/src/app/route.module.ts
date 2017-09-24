@@ -6,20 +6,20 @@ import {Routes} from "@angular/router";
 import {LoginPageComponent} from "./auth/login-page/login-page.component";
 import {MainLayoutComponent} from "./layout/main-layout/main-layout.component";
 import {CreateAccountPageComponent} from "./auth/create-account-page/create-account-page.component";
-import {SocialTestComponent} from "./widgets/social-test/social-test.component";
+import {UserProfileComponent} from "./auth/user-profile/user-profile.component";
 
 export const APP_ROUTES : Routes = [
   { path:'login', component: LoginPageComponent },
   { path:'signup', component: CreateAccountPageComponent },
   {
-    path:'dash',
+    path:'',
     component: MainLayoutComponent,
     children :[
       {
-        path: 'social',
-        component: SocialTestComponent,
+        path: ':username',
+        component: UserProfileComponent,
         data : {
-          heading: 'Social'
+          heading: 'User Profile'
         }
       }
     ]

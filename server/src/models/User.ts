@@ -2,9 +2,9 @@
  * Created by MalakaD on 7/26/2017.
  */
 
-import { Schema, Model } from "mongoose";
-import { DBController } from "../controllers/db-controller";
-import { IBase, IBaseModel } from "./BaseModel";
+import {Model, Schema} from "mongoose";
+import {DBController} from "../controllers/db-controller";
+import {IBase, IBaseModel} from "./BaseModel";
 const dbCon = DBController.getInstance().getConnection();
 
 let userSchema: Schema = new Schema({
@@ -25,20 +25,23 @@ let userSchema: Schema = new Schema({
 let dataEntrySchema: Schema = new Schema({
 	papers : {type: Schema.Types.ObjectId, ref : 'Paper'},
 	confirmed : {type:Boolean, default:false},
+	parent: {type: Schema.Types.ObjectId, ref : 'User'},
 });
 
 let studentSchema : Schema = new Schema({
 	school : {type: Schema.Types.ObjectId, ref : 'School'},
 	enroll : [{type :Schema.Types.ObjectId, ref : 'Subject'}],
 	classGroup : [{type : Schema.Types.ObjectId,ref : 'ClassGroup'}],
-	birthday : {type :Date}
+	birthday : {type :Date},
+	parent: {type: Schema.Types.ObjectId, ref : 'User'},
 });
 
 let teacherSchema : Schema = new Schema({
 	visibleName : {type : String},
 	subject : [{type :Schema.Types.ObjectId, ref : 'Subject'}],
 	classGroup : [{type : Schema.Types.ObjectId,ref : 'ClassGroup'}],
-	confirmed : {type : Boolean, required : true, default : false}
+	confirmed : {type : Boolean, required : true, default : false},
+	parent: {type: Schema.Types.ObjectId, ref : 'User'},
 });
 
 export interface IUser extends IBase{
@@ -59,6 +62,7 @@ export interface IUser extends IBase{
 export interface IDataEntry extends IBase{
 	paper ?: any,
 	confirmed?: boolean,
+	parent: string,
 }
 
 export interface IStudent extends IBase{
@@ -66,6 +70,7 @@ export interface IStudent extends IBase{
 	enroll ?: any,
 	classGroup ?: any,
 	birthday ?: Date,
+	parent: string,
 }
 
 export interface ITeacher extends IBase{
@@ -73,6 +78,7 @@ export interface ITeacher extends IBase{
 	subject ?: Array<any>,
 	classGroup ?: Array<any>,
 	confirmed ?: boolean,
+	parent: string,
 }
 
 export interface IUserModel extends IUser, IBaseModel{}
