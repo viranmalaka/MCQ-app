@@ -2,7 +2,7 @@ import {NextFunction, Request, Response, Router} from "express";
 import * as passport from "passport";
 import * as LocalStrategy from "passport-local";
 import * as jwt from "jsonwebtoken";
-import {UserController} from "../controllers/user-controller";
+import {StudentController, TeacherController, UserController} from "../controllers/user-controller";
 import {DataEntry, IUserModel, Student, Teacher, User} from "../models/User";
 import {BaseRouter, RouterConfig} from "./base-router";
 
@@ -16,35 +16,42 @@ export class UserRouter {
 
 	private static routerConfig: RouterConfig = {
 		modelName: 'User',
-		validationRules : UserController.rules,
-		guestActions : {
+		ownerShip: '_id',
+		validationRules: UserController.rules,
+		guestActions: {
 			count: true,
+			r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
 		},
-		otherActions : {
-			S : {
+		otherActions: {
+			S: {
 				c: true,
-				r: ['name', 'district'],
-				u: ['name'],
+				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
 				d: false,
+				count: true,
 			},
-			T : {
+			T: {
 				c: true,
-				r: ['name', 'district'],
-				u: ['name'],
+				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
 				d: false,
+				count: true,
 			},
-			D : {
+			D: {
 				c: true,
-				r: ['name', 'district'],
-				u: ['name'],
+				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
 				d: false,
+				count: true,
 			},
 
+		},
+		ownerActions: {
+			count: true,
+			u: ['username', 'email', 'firstName', 'lastName', 'address', 'telephone', 'aboutMe' ],
+			r: ['username', 'accType', 'email', 'firstName', 'lastName', 'address', 'telephone', 'aboutMe', 'accId', 'profilePicture' ],
 		}
 	};
 
 
-	constructor (){
+	constructor() {
 		this.baseRouter = new BaseRouter();
 	}
 
@@ -55,7 +62,7 @@ export class UserRouter {
 
 		router.post('/signup', UserRouter.signup);
 		router.post('/login', UserRouter.login);
-
+		router.get('/token_user', UserRouter.getTokenUser);
 		router.use('/sub/student', new StudentRouter().create());
 		router.use('/sub/teacher', new TeacherRouter().create(router));
 		router.use('/sub/dataentry', new DataEntryRouter().create(router));
@@ -126,11 +133,29 @@ export class UserRouter {
 		if (!req.get('token')) {
 			return next();
 		} else {
-			let user = jwt.verify(req.get('token'), 'secret');
-			new UserController(User).findById(user['id'], '', function (err: Error, doc: IUserModel) {
-				req.user = doc;
-				return next();
-			})
+			jwt.verify(req.get('token'), 'secret', (err, user) => {
+				if(err){
+					return next(err);
+				}
+				new UserController(User).findById(user['id'], '', function (err: Error, doc: IUserModel) {
+					req.user = doc;
+					return next();
+				})
+			});
+		}
+	}
+
+	public static getTokenUser(req: Request, res: Response, next: NextFunction) {
+		if (req.user) {
+			let user = {
+				_id: req.user._id,
+				accId: req.user.accId,
+				username: req.user.username,
+				email: req.user.email,
+				accType: req.user.accType,
+				profilePicture: req.user.profilePicture
+			};
+			res.jsonp({user: user, status: 1});
 		}
 	}
 
@@ -168,35 +193,36 @@ class StudentRouter {
 	private baseRouter: BaseRouter;
 	private static studentRouterConfig: RouterConfig = {
 		modelName: 'Student',
-		validationRules : UserController.rules,
+		validationRules: StudentController.rules,
 		ownerShip: 'parent',
-		guestActions : {
+		guestActions: {
 			count: false,
 		},
-		ownerActions : {
+		ownerActions: {
 			count: true,
+			r: ['school', 'enroll', 'classGroup', 'birthday', 'parent'],
+			u: ['school', 'enroll', 'classGroup', 'birthday', 'parent'],
 			d: true,
 		},
-		otherActions : {
-			S : {
+		otherActions: {
+			S: {
 				c: true,
-				r: ['name', 'district'],
-				u: ['name'],
+				r: ['school'],
+				u: [],
 				d: false,
 			},
-			T : {
+			T: {
 				c: true,
-				r: ['name', 'district'],
-				u: ['name'],
+				r: ['school'],
+				u: [],
 				d: false,
 			},
-			D : {
+			D: {
 				c: true,
-				r: ['name', 'district'],
-				u: ['name'],
+				r: ['school'],
+				u: [],
 				d: false,
 			},
-
 		}
 	};
 
@@ -213,6 +239,40 @@ class StudentRouter {
 
 class TeacherRouter {
 	private baseRouter: BaseRouter;
+	private static teacherRouterConfig: RouterConfig = {
+		modelName: 'Teacher',
+		validationRules: TeacherController.rules,
+		ownerShip: 'parent',
+		guestActions: {
+			count: false,
+		},
+		ownerActions: {
+			count: true,
+			r: ['visibleName', 'subject', 'classGroup', 'confirmed', 'parent'],
+			u: ['visibleName', 'subject', 'classGroup', 'parent'],
+			d: true,
+		},
+		otherActions: {
+			S: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+			T: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+			D: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+		}
+	};
 
 	constructor() {
 		this.baseRouter = new BaseRouter();

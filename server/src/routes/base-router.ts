@@ -76,7 +76,7 @@ export class BaseRouter {
 			      if (req.query['_id']) {
 				      new BaseController(type).findById(req.query['_id'], this.commonSelect(select, options.ownerActions.r), (err, results) => {
 					      if (err) return next(err);
-					      if (results[options.ownerShip] == user._id) {   // check the ownership
+					      if (results[options.ownerShip].equals(user._id)) {   // check the ownership
 						      res.jsonp({status: 4, result: results});
 					      } else {    // others
 						      if (options.otherActions[accType].r) {
@@ -99,7 +99,7 @@ export class BaseRouter {
 
 				      // ownership validation : (req.query[options.ownerShip] == user._id)
 				      if (req.query[options.ownerShip]) { // go to ownership validation
-					      if (req.query[options.ownerShip] == user._id) {
+					      if (req.query[options.ownerShip].equals(user._id)) {
 						      // owner
 						      new BaseController(type).find(req.query, sort, this.commonSelect(select, options.ownerActions.r), resultGenFunction)
 					      } else {
@@ -165,7 +165,7 @@ export class BaseRouter {
 
   private add(type, options: RouterConfig){
     return function (req: Request, res: Response, next: NextFunction) {
-	    let addFunction = () => {
+	    let addFunction = (readFields: Array<string>) => {
 		    new BaseController(type).add(req.body, options.validationRules, (err, result) => {
 			    if (err) {
 			    	if(err.errors){
@@ -175,23 +175,23 @@ export class BaseRouter {
 				    }
 			    	return next(err);
 			    }
-			    res.jsonp({status: 2, result: result});
+			    res.jsonp({status: 2, result: this.filterResponse(result, readFields)});
 		    });
 	    };
 
     	if (req.user) {
 	    	if(req.user.accType == 'A'){
-			    return addFunction();
+			    return addFunction([]);
 		    }else{
 	    		if(options.otherActions[req.user.accType].c){
-						return addFunction();
+						return addFunction(options.otherActions[req.user.accType].r);
 			    }else{
 				    return next({status : 22, message : 'No privilege to create : ' + req.user.username, from:'base-router: add'});
 			    }
 		    }
 	    } else {
 	    	if(options.guestActions.c){
-			    return addFunction();
+			    return addFunction(options.guestActions.r);
 		    }else{
 			    return next({status : 21, message : 'No privilege to create: guest', from:'base-router: add'});
 		    }
@@ -209,10 +209,10 @@ export class BaseRouter {
         controller.findById(id,'', (err, object) => {
         	if(err) return next(err);
 	        if (object) {
-		        if (object[options.ownerShip] == req.user._id || req.user.accType == 'A') {
+		        if (object[options.ownerShip].equals(req.user._id) || req.user.accType == 'A') {
 			        controller.editById(id, req.body, options.validationRules, (err, result) => {
 				        if (err) return next(err);
-				        return res.jsonp({status: 3, result: result});
+				        return res.jsonp({status: 3, result: this.filterResponse(result, options.ownerActions.r)});
 			        });
 		        } else {
 		        	return next({status: 22, message: 'No privilege to update : ' + req.user.username, from:'base-router: update'})
@@ -227,25 +227,25 @@ export class BaseRouter {
 
   private edit(type, options: RouterConfig){
 	  return (req: Request, res: Response, next: NextFunction) => {
-	  	let editFunction = (opt) => {
+	  	let editFunction = (opt, readFields) => {
 			  new BaseController(type).edit(req.params['id'], req.body, options.validationRules, opt, (err, result) => {
 				  if (err) return next(err);
-				  return res.jsonp({status: 3, result: result});
+				  return res.jsonp({status: 3, result: this.filterResponse(result, readFields)});
 			  });
 		  };
 		  if (req.user) {
 			  if (req.user.accType == 'A') {
-				  editFunction(options.ownerActions ? options.ownerActions.u: []);
+				  editFunction(options.ownerActions ? options.ownerActions.u: [], options.ownerActions.r);
 			  } else {
 				  if (options.otherActions[req.user.accType].u) {
-					  editFunction(options.otherActions[req.user.accType].u);
+					  editFunction(options.otherActions[req.user.accType].u, options.otherActions[req.user.accType].r);
 				  } else {
 				  	return next({status: 22, message:'No privilege to edit : ' + req.user.username, from:'base-router: edit'})
 				  }
 			  }
 		  } else {
 			  if (options.guestActions) {
-				  editFunction(options.guestActions.u);
+				  editFunction(options.guestActions.u, options.guestActions.r);
 			  } else {
 				  return next({status: 21, message:'No privilege to edit : guest', from:'base-router: edit'})
 			  }
@@ -269,7 +269,7 @@ export class BaseRouter {
 		      new BaseController(type).findById(id, '', (err, doc) => {
 			      if (err) return next(err);
 			      if (doc) {
-				      if (doc[options.ownerShip] == req.user._id) {
+				      if (doc[options.ownerShip].equals(req.user._id)) {
 					      if (options.ownerActions.d) {
 						      new BaseController(type).remove(id, (err, doc) => {
 							      if (err) return next(err);
@@ -360,5 +360,20 @@ export class BaseRouter {
 			x = canSelect;
 		}
 		return x;
+	}
+
+	private filterResponse(data: any, allowedFields: Array<string>): any{
+		if(allowedFields === undefined || allowedFields.length === 0){
+			return data;
+		} else {
+			const result = {};
+			allowedFields.forEach(field => {
+				result[field] = data[field];
+			});
+			if(data['_id']){
+				result['_id'] = data['_id'];
+			}
+			return result;
+		}
 	}
 }

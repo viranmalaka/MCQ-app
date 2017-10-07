@@ -4,7 +4,6 @@
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as express from "express";
-import {NextFunction, Request, Response} from "express";
 import * as logger from "morgan";
 import * as path from "path";
 import * as fs from "fs";
@@ -14,6 +13,7 @@ import {UserRouter} from "./routes/user-router";
 import {DBController} from "./controllers/db-controller";
 import errorHandler = require("errorhandler");
 import methodOverride = require("method-override");
+const cors = require('cors');
 
 // import {APIRoute} from "./routes/api";
 
@@ -70,6 +70,9 @@ export class Server {
   public api() {
     let router: express.Router;
     router = express.Router();
+
+    // Enable Cors
+    this.corsEnableMiddleware();
 
     //IndexRoute
     APIRoute.create(router);
@@ -137,6 +140,7 @@ export class Server {
       // res.locals.message = err.message;
       // res.locals.error = req.app.get('dev') === 'development' ? err : {};
 
+      console.log(err.message);
       console.log('\x1b[31m' +  err.message + "\n\t" + " from --> " + err['from']);
 
       res.status(500).jsonp({
@@ -147,10 +151,12 @@ export class Server {
   }
 
 
-  private static corsEnableMiddleware(req: Request, res: Response, next: NextFunction) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+  private corsEnableMiddleware() {
+    const corsOptions = {
+      origin: 'http://localhost:4200/',
+      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    };
+    this.app.use(cors());
   }
 
 }

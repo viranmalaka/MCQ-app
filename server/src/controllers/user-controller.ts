@@ -9,7 +9,17 @@ import * as bcryptjs from "bcryptjs";
 export class UserController extends BaseController {
 
 	public static rules = {
-
+		username: [
+			{ fun :'isEmpty', expected: false, msg: 'User name is required' },
+			{ fun: 'isAlphanumeric', msg: 'Invalid name' },
+			{ fun: 'isLength', inputs: { min: 6, max: 20 }, msg: 'User name should be in range 6 to 20' }
+		],
+		email : [
+			{ fun: 'isEmail', msg: 'Invalid Email' },
+		],
+		firstName : [
+			{ fun: 'isEmpty', expected: false, msg: 'first name is required'}
+		],
 	};
 
 	public createUser(data: IUser, next) {
@@ -81,6 +91,7 @@ export class DataEntryController extends BaseController {
 }
 
 export class TeacherController extends BaseController {
+	public static rules = {};
 
 	public modelValidator(data: ITeacher): any {
 		return null;
@@ -89,7 +100,7 @@ export class TeacherController extends BaseController {
 }
 
 export class StudentController extends BaseController {
-
+	public static rules = {};
 	public modelValidator(data: IStudent): any {
 		return null;
 	}

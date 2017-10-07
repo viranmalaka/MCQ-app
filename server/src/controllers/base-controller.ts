@@ -30,7 +30,7 @@ export class BaseController {
 		if (val) {
 			return next({status: 16, message: val, from: 'BaseController: editById'});
 		}
-		this.type.findByIdAndUpdate(id, data, next);
+		this.type.findByIdAndUpdate(id, data, {'new': true}, next);
 	}
 
 	public edit(id: string, data: any, rules:any, allowedFields: Array<string>, next: Function) {

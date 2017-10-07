@@ -18,6 +18,7 @@ let userSchema: Schema = new Schema({
 	address : {type : String},
 	telephone : {type : String},
 	profilePicture : {type : String},
+	aboutMe: {type: String},
 	resetPasswordToken: {type : String},
 	resetPasswordExpires: {type : Date}
 });
@@ -55,6 +56,7 @@ export interface IUser extends IBase{
 	address ?: String,
 	telephone ?: String,
 	profilePicture ?: String,
+	aboutMe ?: String,
 	resetPasswordToken?: String,
 	resetPasswordExpires?: Date
 }
