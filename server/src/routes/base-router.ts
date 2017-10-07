@@ -5,6 +5,7 @@ import {IUserModel} from "../models/User";
  * Created by malaka on 7/21/17.
  */
 
+// Some customizable interfaces
 export interface Ability{
 	c?: boolean,
 	r?: Array<string>,

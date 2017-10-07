@@ -1,6 +1,7 @@
 import {BaseController} from "./base-controller";
-import {DataEntry, IDataEntry, IStudent, ITeacher, IUser, Student, Teacher, User} from "../models/User";
+import {DataEntry, IUser, Student, Teacher, User} from "../models/User";
 import * as bcryptjs from "bcryptjs";
+import {RouterConfig} from "../routes/base-router";
 
 /**
  * Created by MalakaD on 7/26/2017.
@@ -21,6 +22,43 @@ export class UserController extends BaseController {
 			{ fun: 'isEmpty', expected: false, msg: 'first name is required'}
 		],
 	};
+
+	public static routerConfig: RouterConfig = {
+		modelName: 'User',
+		ownerShip: '_id',
+		validationRules: UserController.rules,
+		guestActions: {
+			count: true,
+			r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
+		},
+		otherActions: {
+			S: {
+				c: true,
+				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
+				d: false,
+				count: true,
+			},
+			T: {
+				c: true,
+				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
+				d: false,
+				count: true,
+			},
+			D: {
+				c: true,
+				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
+				d: false,
+				count: true,
+			},
+
+		},
+		ownerActions: {
+			count: true,
+			u: ['username', 'email', 'firstName', 'lastName', 'address', 'telephone', 'aboutMe' ],
+			r: ['username', 'accType', 'email', 'firstName', 'lastName', 'address', 'telephone', 'aboutMe', 'accId', 'profilePicture' ],
+		}
+	};
+
 
 	public createUser(data: IUser, next) {
 		let valErrors = super.modelValidator(data, UserController.rules);
@@ -84,25 +122,120 @@ export class UserController extends BaseController {
 
 export class DataEntryController extends BaseController {
 
-	public modelValidator(data: IDataEntry): any {
-		return null;
-	}
+	private static rules = {};
+
+	public static dataEntryRouterConfig: RouterConfig = {
+		modelName: 'Teacher',
+		validationRules: DataEntryController.rules,
+		ownerShip: 'parent',
+		guestActions: {
+			count: false,
+		},
+		ownerActions: {
+			count: true,
+			r: ['visibleName', 'subject', 'classGroup', 'confirmed', 'parent'],
+			u: ['visibleName', 'subject', 'classGroup', 'parent'],
+			d: true,
+		},
+		otherActions: {
+			S: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+			T: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+			D: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+		}
+	};
 
 }
 
 export class TeacherController extends BaseController {
 	public static rules = {};
 
-	public modelValidator(data: ITeacher): any {
-		return null;
-	}
+	public static teacherRouterConfig: RouterConfig = {
+		modelName: 'Teacher',
+		validationRules: TeacherController.rules,
+		ownerShip: 'parent',
+		guestActions: {
+			count: false,
+		},
+		ownerActions: {
+			count: true,
+			r: ['visibleName', 'subject', 'classGroup', 'confirmed', 'parent'],
+			u: ['visibleName', 'subject', 'classGroup', 'parent'],
+			d: true,
+		},
+		otherActions: {
+			S: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+			T: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+			D: {
+				c: true,
+				r: ['visibleName', 'subject', 'classGroup'],
+				u: [],
+				d: false,
+			},
+		}
+	};
 
 }
 
 export class StudentController extends BaseController {
 	public static rules = {};
-	public modelValidator(data: IStudent): any {
-		return null;
-	}
 
+	static studentRouterConfig: RouterConfig = {
+		modelName: 'Student',
+		validationRules: StudentController.rules,
+		ownerShip: 'parent',
+		guestActions: {
+			count: false,
+		},
+		ownerActions: {
+			count: true,
+			r: ['school', 'enroll', 'classGroup', 'birthday', 'parent'],
+			u: ['school', 'enroll', 'classGroup', 'birthday', 'parent'],
+			d: true,
+		},
+		otherActions: {
+			S: {
+				c: true,
+				r: ['school'],
+				u: [],
+				d: false,
+			},
+			T: {
+				c: true,
+				r: ['school'],
+				u: [],
+				d: false,
+			},
+			D: {
+				c: true,
+				r: ['school'],
+				u: [],
+				d: false,
+			},
+		}
+	};
 }

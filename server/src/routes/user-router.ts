@@ -2,9 +2,14 @@ import {NextFunction, Request, Response, Router} from "express";
 import * as passport from "passport";
 import * as LocalStrategy from "passport-local";
 import * as jwt from "jsonwebtoken";
-import {StudentController, TeacherController, UserController} from "../controllers/user-controller";
+import {
+	DataEntryController,
+	StudentController,
+	TeacherController,
+	UserController
+} from "../controllers/user-controller";
 import {DataEntry, IUserModel, Student, Teacher, User} from "../models/User";
-import {BaseRouter, RouterConfig} from "./base-router";
+import {BaseRouter} from "./base-router";
 
 /**
  * Created by MalakaD on 7/26/2017.
@@ -14,43 +19,6 @@ export class UserRouter {
 
 	private baseRouter: BaseRouter;
 
-	private static routerConfig: RouterConfig = {
-		modelName: 'User',
-		ownerShip: '_id',
-		validationRules: UserController.rules,
-		guestActions: {
-			count: true,
-			r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
-		},
-		otherActions: {
-			S: {
-				c: true,
-				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
-				d: false,
-				count: true,
-			},
-			T: {
-				c: true,
-				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
-				d: false,
-				count: true,
-			},
-			D: {
-				c: true,
-				r: ['username', 'accType', 'accId', 'email', 'firstName', 'lastName', 'address', 'telephone'],
-				d: false,
-				count: true,
-			},
-
-		},
-		ownerActions: {
-			count: true,
-			u: ['username', 'email', 'firstName', 'lastName', 'address', 'telephone', 'aboutMe' ],
-			r: ['username', 'accType', 'email', 'firstName', 'lastName', 'address', 'telephone', 'aboutMe', 'accId', 'profilePicture' ],
-		}
-	};
-
-
 	constructor() {
 		this.baseRouter = new BaseRouter();
 	}
@@ -58,7 +26,7 @@ export class UserRouter {
 	public create(): Router {
 		let router: Router = Router();
 
-		this.baseRouter.create(router, User, UserRouter.routerConfig);
+		this.baseRouter.create(router, User, UserController.routerConfig);
 
 		router.post('/signup', UserRouter.signup);
 		router.post('/login', UserRouter.login);
@@ -191,40 +159,6 @@ export class UserRouter {
 
 class StudentRouter {
 	private baseRouter: BaseRouter;
-	private static studentRouterConfig: RouterConfig = {
-		modelName: 'Student',
-		validationRules: StudentController.rules,
-		ownerShip: 'parent',
-		guestActions: {
-			count: false,
-		},
-		ownerActions: {
-			count: true,
-			r: ['school', 'enroll', 'classGroup', 'birthday', 'parent'],
-			u: ['school', 'enroll', 'classGroup', 'birthday', 'parent'],
-			d: true,
-		},
-		otherActions: {
-			S: {
-				c: true,
-				r: ['school'],
-				u: [],
-				d: false,
-			},
-			T: {
-				c: true,
-				r: ['school'],
-				u: [],
-				d: false,
-			},
-			D: {
-				c: true,
-				r: ['school'],
-				u: [],
-				d: false,
-			},
-		}
-	};
 
 	constructor() {
 		this.baseRouter = new BaseRouter();
@@ -233,53 +167,19 @@ class StudentRouter {
 	public create(): Router {
 		let router: Router = Router();
 
-		return this.baseRouter.create(router, Student, StudentRouter.studentRouterConfig);
+		return this.baseRouter.create(router, Student, StudentController.studentRouterConfig);
 	}
 }
 
 class TeacherRouter {
 	private baseRouter: BaseRouter;
-	private static teacherRouterConfig: RouterConfig = {
-		modelName: 'Teacher',
-		validationRules: TeacherController.rules,
-		ownerShip: 'parent',
-		guestActions: {
-			count: false,
-		},
-		ownerActions: {
-			count: true,
-			r: ['visibleName', 'subject', 'classGroup', 'confirmed', 'parent'],
-			u: ['visibleName', 'subject', 'classGroup', 'parent'],
-			d: true,
-		},
-		otherActions: {
-			S: {
-				c: true,
-				r: ['visibleName', 'subject', 'classGroup'],
-				u: [],
-				d: false,
-			},
-			T: {
-				c: true,
-				r: ['visibleName', 'subject', 'classGroup'],
-				u: [],
-				d: false,
-			},
-			D: {
-				c: true,
-				r: ['visibleName', 'subject', 'classGroup'],
-				u: [],
-				d: false,
-			},
-		}
-	};
 
 	constructor() {
 		this.baseRouter = new BaseRouter();
 	}
 
 	public create(router: Router): Router {
-		return this.baseRouter.create(router, Teacher);
+		return this.baseRouter.create(router, Teacher, TeacherController.teacherRouterConfig);
 	}
 }
 
@@ -291,6 +191,6 @@ class DataEntryRouter {
 	}
 
 	public create(router: Router): Router {
-		return this.baseRouter.create(router, DataEntry);
+		return this.baseRouter.create(router, DataEntry, DataEntryController.dataEntryRouterConfig);
 	}
 }

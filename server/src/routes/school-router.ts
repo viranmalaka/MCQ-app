@@ -1,4 +1,4 @@
-import {BaseRouter, RouterConfig} from "./base-router";
+import {BaseRouter} from "./base-router";
 import {Router} from "express";
 import {School} from "../models/School";
 import {SchoolController} from "../controllers/school-controller";
@@ -8,36 +8,6 @@ import {SchoolController} from "../controllers/school-controller";
 export class SchoolRouter {
   private baseRouter: BaseRouter;
 
-  private static routerConfig: RouterConfig = {
-  	modelName: 'School',
-	  validationRules : SchoolController.rules,
-	  guestActions : {
-	  	r : ['name', 'district'],
-		  count: true
-	  },
-	  otherActions : {
-	  	S : {
-	  		c: false,
-	  		r: ['name', 'district'],
-			  d: false,
-			  count: true,
-		  },
-		  T : {
-	  		c: false,
-	  		r: ['name', 'district'],
-			  d: false,
-			  count: true,
-		  },
-		  D : {
-	  		c: true,
-	  		r: ['name', 'district'],
-			  u: ['name'],
-			  d: false,
-			  count: true,
-		  },
-	  }
-  };
-
   constructor(){
     this.baseRouter = new BaseRouter();
   }
@@ -45,6 +15,6 @@ export class SchoolRouter {
   public create(): Router{
 	  let router: Router = Router();
 
-    return this.baseRouter.create(router, School, SchoolRouter.routerConfig);
+    return this.baseRouter.create(router, School, SchoolController.routerConfig);
   }
 }

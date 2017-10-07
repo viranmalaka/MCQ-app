@@ -1,3 +1,4 @@
+import {RouterConfig} from "../routes/base-router";
 const validator = require('validator');
 /**
  * Created by malaka on 7/21/17.
@@ -40,6 +41,36 @@ export class SchoolController{
 			{fun: 'isEmpty', expected: false, msg: 'District cannot be empty'},
 			{fun: 'isIn', inputs: DISTRICT_LIST, msg: 'Invalid District'}
 		]
+	};
+
+	public static routerConfig: RouterConfig = {
+		modelName: 'School',
+		validationRules : SchoolController.rules,
+		guestActions : {
+			r : ['name', 'district'],
+			count: true
+		},
+		otherActions : {
+			S : {
+				c: false,
+				r: ['name', 'district'],
+				d: false,
+				count: true,
+			},
+			T : {
+				c: false,
+				r: ['name', 'district'],
+				d: false,
+				count: true,
+			},
+			D : {
+				c: true,
+				r: ['name', 'district'],
+				u: ['name'],
+				d: false,
+				count: true,
+			},
+		}
 	};
 
 }
