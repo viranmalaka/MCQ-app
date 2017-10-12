@@ -46,7 +46,6 @@ export class UserState {
     this._id = value;
   }
 
-
   get isAuthenticated(): boolean {
     return this._isAuthenticated;
   }

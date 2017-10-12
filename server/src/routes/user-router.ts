@@ -105,7 +105,7 @@ export class UserRouter {
 				if(err){
 					return next(err);
 				}
-				new UserController(User).findById(user['id'], '', function (err: Error, doc: IUserModel) {
+				new UserController(User).findById(user['id'], '', '', function (err: Error, doc: IUserModel) {
 					req.user = doc;
 					return next();
 				})

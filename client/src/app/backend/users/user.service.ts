@@ -3,97 +3,81 @@
  */
 
 import {Injectable} from "@angular/core";
-import {environment} from "../../../environments/environment";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {UserState} from "./user-state";
+import {CookieService} from "ngx-cookie";
+import {APIBackEnd} from "../api.backend.service";
+import {APICaller} from "../api.caller";
 
 
 @Injectable()
-export class UserService {
+export class UserService extends APICaller{
 
-  private userDomain: string = environment.apiDomain + "user";
+  public readyToStartApp: Promise<any>;
 
-  constructor(private http: HttpClient){
+  private userDomain: string = "user/";
 
+  constructor(private server: APIBackEnd, private cookieService: CookieService) {
+    super(server);
   }
 
-  public postLogin(username: string, password: string): Promise<any>{
+  public readAuthCookie(): boolean {
+    let localCookieToken = this.cookieService.get('auth-token');
+    if (localCookieToken) {
+      UserState.getInstance().token = localCookieToken;
+      return true;
+    }
+    return false;
+  }
+
+  public writeAuthCookie(token: string): boolean {
+    this.cookieService.put('auth-token', token);
+    console.log('write cookie');
+    return true;
+  }
+
+  public getTokenUser(): Promise<any> {
+    return this.server.sendGet(this.userDomain + 'token_user', {}, true, 1);
+  }
+
+  public postLogin(username: string, password: string): Promise<any> {
     const body = {
       username: username,
       password: password,
     };
-
-    return new Promise((res, rej) => {
-      this.http.post(this.userDomain + "/login", body).subscribe(data => {
-        if(data['status'] == 1){
-          res(data);
-        } else {
-          rej(data);
-        }
-      });
-    });
+    return this.server.sendPost(this.userDomain + 'login', body, {}, false, 1);
   }
 
-  public getCountByUserName(username: string): Promise<any>{
-    return new Promise((res, rej) => {
-      this.http.get(this.userDomain + "/count?username=" + username).subscribe(data => {
-        if(data['status'] == 4){
-          res(data['count']);
-        }else{
-          rej(data['mes']);
-        }
-      });
-    })
+  public getCountByUserName(username: string): Promise<any> {
+    return this.server.sendGet(this.userDomain + "count?username=" + username);
   }
 
-  public getCountByEmail(email: string): Promise<any>{
-    return new Promise((res, rej) => {
-      this.http.get(this.userDomain + "/count?email=" + email).subscribe(data => {
-        if(data['status'] == 4){
-          res(data['count']);
-        }else{
-          rej(data['mes']);
-        }
-      });
-    })
+  public getCountByEmail(email: string): Promise<any> {
+    return this.server.sendGet(this.userDomain + "count?email=" + email);
   }
 
-  public postSignUp(username: string, password: string, email: string, type: string): Promise<any>{
+  public postSignUp(username: string, password: string, email: string, type: string): Promise<any> {
     const body = {
-      username : username,
+      username: username,
       password: password,
       email: email,
       accType: type
     };
-    return new Promise((res, rej) => {
-      this.http.post(this.userDomain + '/signup', body).subscribe(data => {
-        if(data['status'] == 1){
-          res(data);
-        }else{
-          rej(data);
-        }
-      });
-    });
+    return this.server.sendPost(this.userDomain + 'signup', body,{}, false, 1);
   }
 
-  public getUser(path: string, params: any, success: number, addToken: boolean = true): Promise<any> {
-    let headers = new HttpHeaders();
-    let httpParams = new HttpParams();
-    Object.keys(params).forEach(val => {
-      httpParams = httpParams.append(val, params[val]);
-    });
-    if(addToken){
-      headers = headers.append('token', UserState.getInstance().token);
-    }
-    console.log(headers);
-    return new Promise((resolve, reject) => {
-      this.http.get(this.userDomain + path, { params: httpParams, headers: headers}).subscribe(data => {
-        if(data['status'] == success) {
-          resolve(data);
-        } else {
-          reject(data);
-        }
-      })
-    });
+  public getUser(path: string, params: any, success: number, auth = true): Promise<any> {
+    return this.server.sendGet(path, {params: params}, auth, success);
+  }
+
+  public putUserDetails(data: any): Promise<any> {
+    return this.server.sendPut(this.userDomain + UserState.getInstance().user['_id'], data);
+  }
+
+  public putOneUserDetails(data: any): Promise<any> {
+    return this.server.sendPut(this.userDomain + UserState.getInstance().user['_id'] + '/edit', data)
+  }
+
+  public putOneStudentDetails(data: any): Promise<any> {
+    return this.server.sendPut(this.userDomain + 'sub/student/' + UserState.getInstance().user['accId'] + '/edit', data);
   }
 }

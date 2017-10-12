@@ -17,15 +17,25 @@ export class BaseController {
 		return new this.type(data).save(next);
 	}
 
-	public find(query: any, sort: any, select: any, next: Function) {
-		this.type.find(query).sort(sort).select(select).exec(next);
+	public find(query: any, sort: any, select: any, distinctField: string, popFields, next: Function) {
+		if (distinctField === '') {
+			this.type.find(query).sort(sort).select(select).populate(popFields).exec(next);
+		} else {
+			this.type.find(query).distinct(distinctField).exec(next);
+		}
 	}
 
-	public findById(id: any, select: any, next: Function) {
-		this.type.findById(id, select, next);
+	public findById(id: any, select: any, popField: string, next: Function) {
+		this.type.findById(id, select).populate(popField).exec(next);
 	}
 
-	public editById(id: any, data: IBase, rules, next: Function) {
+	// full object will be validated.
+	public editById(id: any, data: IBase, rules: any, allowedFields: Array<string>, next: Function) {
+		Object.keys(data).forEach(key => {
+			if(allowedFields.length > 0 && allowedFields.indexOf(key) < 0) {
+				delete data[key];
+			}
+		});
 		let val = this.modelValidator(data, rules);
 		if (val) {
 			return next({status: 16, message: val, from: 'BaseController: editById'});
@@ -33,11 +43,17 @@ export class BaseController {
 		this.type.findByIdAndUpdate(id, data, {'new': true}, next);
 	}
 
-	public edit(id: string, data: any, rules:any, allowedFields: Array<string>, next: Function) {
+	// partial of object will be validate and update.
+	public partiallyEdit(id: string, data: any, rules:any, allowedFields: Array<string>, next: Function) {
 		this.type.findById(id, (err, doc) => {
 			if (err) next(err);
 			if (doc) {
-				let active = allowedFields.length > 0 ? allowedFields : Object.keys(data);
+				let active = [];
+				Object.keys(data).forEach((key) => {
+					if(allowedFields.indexOf(key) >= 0) {
+						active.push(key);
+					}
+				});
 				let val = this.modelValidator(data, rules, active);
 				if (!val) {
 					(active).forEach(x => {
@@ -70,7 +86,6 @@ export class BaseController {
 			rules[key].forEach((valRule) => {
 				if (valRule.expected == undefined)
 					valRule.expected = true;
-				let x = validator[valRule.fun](data[key] + '', valRule.inputs);
 				if (validator[valRule.fun](data[key] + '', valRule.inputs) !== valRule.expected) {
 					if (!errorObj) errorObj = {};
 					if (!errorObj[key]) errorObj[key] = {};
@@ -85,11 +100,20 @@ export class BaseController {
 		};
 
 		Object.keys(rules).forEach((key) => {
-			if(fields && fields.length > 0){
-				if(fields.indexOf(key) >= 0){
+			// if(fields){
+			// 	if(fields.length > 0 && fields.indexOf(key) >= 0){
+			// 		valFunction(key);
+			// 	} else {
+			// 		valFunction(key);
+			// 	}
+			// }else{
+			// 	valFunction(key);
+			// }
+			if(fields && fields.length > 0) {
+				if(fields.indexOf(key) >= 0) {
 					valFunction(key);
 				}
-			}else{
+			} else {
 				valFunction(key);
 			}
 		});

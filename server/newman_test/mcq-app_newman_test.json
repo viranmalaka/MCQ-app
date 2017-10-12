@@ -1,10 +1,9 @@
 {
-	"variables": [],
 	"info": {
 		"name": "mcq-app",
 		"_postman_id": "a9a05d8f-75fc-e889-1956-cfa908616b2a",
 		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -31,12 +30,17 @@
 						}
 					],
 					"request": {
-						"url": "{{domain}}test_link",
 						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": ""
+						},
+						"url": {
+							"raw": "{{domain}}test_link",
+							"host": [
+								"{{domain}}test_link"
+							]
 						},
 						"description": "1) test the api is started successfully"
 					},
@@ -76,13 +80,11 @@
 						}
 					],
 					"request": {
-						"url": "{{domain}}user/login",
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"description": ""
+								"value": "application/x-www-form-urlencoded"
 							}
 						],
 						"body": {
@@ -100,6 +102,15 @@
 									"description": "",
 									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}user/login",
+							"host": [
+								"{{domain}}user"
+							],
+							"path": [
+								"login"
 							]
 						},
 						"description": ""
@@ -124,7 +135,10 @@
 									"tests['user is ' + pm.globals.get('var1')] = ",
 									"    _.isEqual(jsonData.user.username, pm.globals.get('var1'));",
 									"",
-									"pm.globals.set(\"student_token\", jsonData.token);   // save to "
+									"pm.globals.set(\"student_token\", jsonData.token);   // save to ",
+									"pm.globals.set(\"student_id\", jsonData.user._id);   // save to ",
+									"pm.globals.set(\"extd_student_id\", jsonData.user.accId);   // save to ",
+									""
 								]
 							}
 						},
@@ -140,13 +154,11 @@
 						}
 					],
 					"request": {
-						"url": "{{domain}}user/login",
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"description": ""
+								"value": "application/x-www-form-urlencoded"
 							}
 						],
 						"body": {
@@ -164,6 +176,15 @@
 									"description": "",
 									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "{{domain}}user/login",
+							"host": [
+								"{{domain}}user"
+							],
+							"path": [
+								"login"
 							]
 						},
 						"description": ""
@@ -222,18 +243,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -253,12 +271,18 @@
 												}
 											]
 										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
+											]
+										},
 										"description": "Send a successful request. both name and district is correct"
 									},
 									"response": []
 								},
 								{
-									"name": "Add school: Successful - for future usage",
+									"name": "Add school: Successful - for future usge",
 									"event": [
 										{
 											"listen": "test",
@@ -295,18 +319,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -324,6 +345,12 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
 											]
 										},
 										"description": "Send a successful request. both name and district is correct"
@@ -352,23 +379,26 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											},
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											}
 										],
 										"body": {
 											"mode": "raw",
 											"raw": ""
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
+											]
 										},
 										"description": "send an empty request. No name and district fields"
 									},
@@ -411,18 +441,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -440,6 +467,12 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
 											]
 										},
 										"description": "Check validations of name\n\tname empty"
@@ -484,18 +517,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -513,6 +543,12 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
 											]
 										},
 										"description": "checking validations of name\n\tinvalid (name##)"
@@ -557,18 +593,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -586,6 +619,12 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
 											]
 										},
 										"description": "checking validations of name\n\tinvalid (name@@)"
@@ -630,18 +669,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -659,6 +695,12 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
 											]
 										},
 										"description": "checking validations of district\n\tempty"
@@ -702,18 +744,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -731,6 +770,12 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
 											]
 										},
 										"description": "checking validations of district\n\tout of the array"
@@ -780,18 +825,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -809,6 +851,16 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
 											]
 										},
 										"description": "correct update request"
@@ -846,23 +898,30 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
 											"mode": "raw",
 											"raw": ""
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
+											]
 										},
 										"description": "correct update request"
 									},
@@ -900,18 +959,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -929,6 +985,16 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
 											]
 										},
 										"description": "correct update request"
@@ -973,18 +1039,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1002,6 +1065,16 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}/edit",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
 											]
 										},
 										"description": "checking validations of name\n\tinvalid (name##)"
@@ -1046,18 +1119,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1075,6 +1145,16 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}/edit",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
 											]
 										},
 										"description": "checking validations of district\n\tempty"
@@ -1118,18 +1198,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1147,6 +1224,16 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}/edit",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
 											]
 										},
 										"description": "checking validations of district\n\tout of the array"
@@ -1196,18 +1283,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1225,6 +1309,15 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
 											]
 										},
 										"description": "correct update request"
@@ -1261,23 +1354,29 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
 											"mode": "raw",
 											"raw": ""
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
+											]
 										},
 										"description": "correct update request"
 									},
@@ -1324,18 +1423,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1353,6 +1449,15 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
 											]
 										},
 										"description": "correct update request"
@@ -1395,18 +1500,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1424,6 +1526,15 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
 											]
 										},
 										"description": "checking validations of name\n\tinvalid (name##)"
@@ -1467,18 +1578,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1496,6 +1604,15 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
 											]
 										},
 										"description": "checking validations of district\n\tempty"
@@ -1539,18 +1656,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -1568,6 +1682,15 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
 											]
 										},
 										"description": "checking validations of district\n\tout of the array"
@@ -1619,18 +1742,22 @@
 												}
 											],
 											"request": {
-												"url": "{{domain}}school",
 												"method": "GET",
 												"header": [
 													{
 														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
+														"value": "{{admin_token}}"
 													}
 												],
 												"body": {
 													"mode": "raw",
 													"raw": ""
+												},
+												"url": {
+													"raw": "{{domain}}school",
+													"host": [
+														"{{domain}}school"
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -1668,6 +1795,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=name",
 													"host": [
@@ -1677,23 +1815,9 @@
 														{
 															"key": "_select",
 															"value": "name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -1731,6 +1855,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-name",
 													"host": [
@@ -1740,23 +1875,9 @@
 														{
 															"key": "_select",
 															"value": "-name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -1794,6 +1915,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-_id,name",
 													"host": [
@@ -1803,23 +1935,9 @@
 														{
 															"key": "_select",
 															"value": "-_id,name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -1857,6 +1975,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-name,-_id",
 													"host": [
@@ -1866,23 +1995,9 @@
 														{
 															"key": "_select",
 															"value": "-name,-_id",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -1914,6 +2029,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=district",
 													"host": [
@@ -1923,23 +2049,9 @@
 														{
 															"key": "_sort",
 															"value": "district",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -1971,6 +2083,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=name",
 													"host": [
@@ -1980,23 +2103,9 @@
 														{
 															"key": "_sort",
 															"value": "name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2028,6 +2137,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=-district",
 													"host": [
@@ -2037,23 +2157,9 @@
 														{
 															"key": "_sort",
 															"value": "-district",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2085,6 +2191,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=-name",
 													"host": [
@@ -2094,23 +2211,9 @@
 														{
 															"key": "_sort",
 															"value": "-name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2166,6 +2269,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?district={{var1}}",
 													"host": [
@@ -2175,23 +2289,9 @@
 														{
 															"key": "district",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2240,6 +2340,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?name={{var1}}",
 													"host": [
@@ -2249,23 +2360,9 @@
 														{
 															"key": "name",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2311,6 +2408,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_id={{var1}}",
 													"host": [
@@ -2320,23 +2428,9 @@
 														{
 															"key": "_id",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2383,6 +2477,12 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-name,-_id&_sort=district",
 													"host": [
@@ -2392,23 +2492,14 @@
 														{
 															"key": "_select",
 															"value": "-name,-_id",
-															"equals": true,
-															"description": ""
+															"equals": true
 														},
 														{
 															"key": "_sort",
 															"value": "district",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": ""
 											},
@@ -2453,6 +2544,12 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_id={{var1}}&_select=name,-_id",
 													"host": [
@@ -2462,23 +2559,14 @@
 														{
 															"key": "_id",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														},
 														{
 															"key": "_select",
 															"value": "name,-_id",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": ""
 											},
@@ -2507,18 +2595,25 @@
 												}
 											],
 											"request": {
-												"url": "{{domain}}school/count",
 												"method": "GET",
 												"header": [
 													{
 														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
+														"value": "{{admin_token}}"
 													}
 												],
 												"body": {
 													"mode": "raw",
 													"raw": ""
+												},
+												"url": {
+													"raw": "{{domain}}school/count",
+													"host": [
+														"{{domain}}school"
+													],
+													"path": [
+														"count"
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2547,6 +2642,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{admin_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school/count?district=Kalutara",
 													"host": [
@@ -2559,23 +2665,9 @@
 														{
 															"key": "district",
 															"value": "Kalutara",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{admin_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -2623,18 +2715,25 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var1}}",
 										"method": "DELETE",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											}
 										],
 										"body": {
 											"mode": "raw",
 											"raw": ""
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var1}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var1}}"
+											]
 										},
 										"description": ""
 									},
@@ -2667,18 +2766,25 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var1}}",
 										"method": "DELETE",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{admin_token}}",
-												"description": ""
+												"value": "{{admin_token}}"
 											}
 										],
 										"body": {
 											"mode": "raw",
 											"raw": ""
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var1}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var1}}"
+											]
 										},
 										"description": ""
 									},
@@ -2734,18 +2840,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -2763,6 +2866,12 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
 											]
 										},
 										"description": "Send a successful request. both name and district is correct"
@@ -2789,23 +2898,26 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school",
 										"method": "POST",
 										"header": [
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											},
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
 											}
 										],
 										"body": {
 											"mode": "raw",
 											"raw": ""
+										},
+										"url": {
+											"raw": "{{domain}}school",
+											"host": [
+												"{{domain}}school"
+											]
 										},
 										"description": "send an empty request. No name and district fields"
 									},
@@ -2850,18 +2962,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -2879,6 +2988,16 @@
 													"description": "",
 													"type": "text"
 												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}/edit",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
 											]
 										},
 										"description": "correct update request"
@@ -2915,21 +3034,28 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}/edit",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}/edit",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}",
+												"edit"
+											]
+										},
 										"description": "correct update request"
 									},
 									"response": []
@@ -2949,18 +3075,14 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"tests[\"Status code is 500 - internal Server Error\"] = responseCode.code === 500;",
 													"",
 													"var jsonData = JSON.parse(responseBody);",
 													"",
-													"tests[\"inner state is 3\"] = ",
-													"        _.isEqual(jsonData.status, 3);",
-													"tests[\"result should be there\"] = ",
-													"        _.has(jsonData, 'result');",
-													"tests[\"check new school name\"] = ",
-													"        _.isEqual(jsonData.result.name, pm.globals.get(\"var1\"));",
-													"tests[\"check new district name\"] = ",
-													"        _.isEqual(jsonData.result.district, pm.globals.get(\"var2\"));"
+													"tests[\"inner state is 22\"] = ",
+													"        _.isEqual(jsonData.status, 22);",
+													"tests[\"msg should be there\"] = ",
+													"        _.has(jsonData, 'msg');"
 												]
 											}
 										},
@@ -2977,18 +3099,15 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {
@@ -3008,6 +3127,15 @@
 												}
 											]
 										},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
+											]
+										},
 										"description": "correct update request"
 									},
 									"response": []
@@ -3020,13 +3148,13 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"tests[\"Status code is 500\"] = responseCode.code === 500;",
+													"tests[\"Status code is 500 - internal Server Error\"] = responseCode.code === 500;",
 													"",
 													"var jsonData = JSON.parse(responseBody);",
 													"",
-													"tests[\"inner state is 16\"] = ",
-													"        _.isEqual(jsonData.status, 16);",
-													"tests[\"result should be there\"] = ",
+													"tests[\"inner state is 22\"] = ",
+													"        _.isEqual(jsonData.status, 22);",
+													"tests[\"msg should be there\"] = ",
 													"        _.has(jsonData, 'msg');"
 												]
 											}
@@ -3042,21 +3170,27 @@
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var3}}",
 										"method": "PUT",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
 											},
 											{
 												"key": "Content-Type",
-												"value": "application/x-www-form-urlencoded",
-												"description": ""
+												"value": "application/x-www-form-urlencoded"
 											}
 										],
 										"body": {},
+										"url": {
+											"raw": "{{domain}}school/{{var3}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var3}}"
+											]
+										},
 										"description": "correct update request"
 									},
 									"response": []
@@ -3106,18 +3240,22 @@
 												}
 											],
 											"request": {
-												"url": "{{domain}}school",
 												"method": "GET",
 												"header": [
 													{
 														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
+														"value": "{{student_token}}"
 													}
 												],
 												"body": {
 													"mode": "raw",
 													"raw": ""
+												},
+												"url": {
+													"raw": "{{domain}}school",
+													"host": [
+														"{{domain}}school"
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -3155,6 +3293,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=name",
 													"host": [
@@ -3164,23 +3313,9 @@
 														{
 															"key": "_select",
 															"value": "name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -3218,6 +3353,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-name",
 													"host": [
@@ -3227,23 +3373,9 @@
 														{
 															"key": "_select",
 															"value": "-name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -3281,6 +3413,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-_id,name",
 													"host": [
@@ -3290,23 +3433,9 @@
 														{
 															"key": "_select",
 															"value": "-_id,name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -3344,6 +3473,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-name,-_id",
 													"host": [
@@ -3353,23 +3493,9 @@
 														{
 															"key": "_select",
 															"value": "-name,-_id",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "find schools with selecting fields"
 											},
@@ -3401,6 +3527,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=district",
 													"host": [
@@ -3410,23 +3547,9 @@
 														{
 															"key": "_sort",
 															"value": "district",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -3458,6 +3581,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=name",
 													"host": [
@@ -3467,23 +3601,9 @@
 														{
 															"key": "_sort",
 															"value": "name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -3515,6 +3635,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=-district",
 													"host": [
@@ -3524,23 +3655,9 @@
 														{
 															"key": "_sort",
 															"value": "-district",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -3572,6 +3689,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_sort=-name",
 													"host": [
@@ -3581,23 +3709,9 @@
 														{
 															"key": "_sort",
 															"value": "-name",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -3653,6 +3767,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?district={{var1}}",
 													"host": [
@@ -3662,23 +3787,9 @@
 														{
 															"key": "district",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -3727,6 +3838,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?name={{var1}}",
 													"host": [
@@ -3736,23 +3858,9 @@
 														{
 															"key": "name",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -3798,6 +3906,14 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {},
 												"url": {
 													"raw": "{{domain}}school?_id={{var1}}",
 													"host": [
@@ -3807,21 +3923,10 @@
 														{
 															"key": "_id",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
+													]
 												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {},
 												"description": "send success request for get all schools"
 											},
 											"response": []
@@ -3867,6 +3972,12 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school?_select=-name,-_id&_sort=district",
 													"host": [
@@ -3876,23 +3987,14 @@
 														{
 															"key": "_select",
 															"value": "-name,-_id",
-															"equals": true,
-															"description": ""
+															"equals": true
 														},
 														{
 															"key": "_sort",
 															"value": "district",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": ""
 											},
@@ -3937,6 +4039,9 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {},
 												"url": {
 													"raw": "{{domain}}school?_id={{var1}}&_select=name,-_id",
 													"host": [
@@ -3946,21 +4051,15 @@
 														{
 															"key": "_id",
 															"value": "{{var1}}",
-															"equals": true,
-															"description": ""
+															"equals": true
 														},
 														{
 															"key": "_select",
 															"value": "name,-_id",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
+													]
 												},
-												"method": "GET",
-												"header": [],
-												"body": {},
 												"description": ""
 											},
 											"response": []
@@ -3988,18 +4087,25 @@
 												}
 											],
 											"request": {
-												"url": "{{domain}}school/count",
 												"method": "GET",
 												"header": [
 													{
 														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
+														"value": "{{student_token}}"
 													}
 												],
 												"body": {
 													"mode": "raw",
 													"raw": ""
+												},
+												"url": {
+													"raw": "{{domain}}school/count",
+													"host": [
+														"{{domain}}school"
+													],
+													"path": [
+														"count"
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -4028,6 +4134,17 @@
 												}
 											],
 											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "token",
+														"value": "{{student_token}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": ""
+												},
 												"url": {
 													"raw": "{{domain}}school/count?district=Kalutara",
 													"host": [
@@ -4040,23 +4157,9 @@
 														{
 															"key": "district",
 															"value": "Kalutara",
-															"equals": true,
-															"description": ""
+															"equals": true
 														}
-													],
-													"variable": []
-												},
-												"method": "GET",
-												"header": [
-													{
-														"key": "token",
-														"value": "{{student_token}}",
-														"description": ""
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": ""
+													]
 												},
 												"description": "send success request for get all schools"
 											},
@@ -4080,16 +4183,14 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"tests[\"Status code is 500 - internal Server Error\"] = responseCode.code === 500;",
 													"",
 													"var jsonData = JSON.parse(responseBody);",
-													"tests[\"inner status should be 5\"] = ",
-													"    _.isEqual(jsonData.status, 5);",
-													"tests[\"result should not null\"] = ",
-													"    _.has(jsonData, 'result');",
 													"",
-													"tests[\"checking _id\"] = ",
-													"    jsonData.result._id === pm.globals.get(\"var1\");"
+													"tests[\"inner state is 22\"] = ",
+													"        _.isEqual(jsonData.status, 22);",
+													"tests[\"msg should be there\"] = ",
+													"        _.has(jsonData, 'msg');"
 												]
 											}
 										},
@@ -4098,24 +4199,28 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"pm.globals.set(\"var1\", pm.environment.get('update_school_id'));"
+													"pm.globals.set(\"var1\", pm.environment.get('new_school_id'));"
 												]
 											}
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var1}}",
 										"method": "DELETE",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": ""
+										"body": {},
+										"url": {
+											"raw": "{{domain}}school/{{var1}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var1}}"
+											]
 										},
 										"description": ""
 									},
@@ -4129,11 +4234,14 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"tests[\"Status code is 500 - internal Server Error\"] = responseCode.code === 500;",
 													"",
 													"var jsonData = JSON.parse(responseBody);",
-													"tests[\"inner status should be 14\"] = ",
-													"    _.isEqual(jsonData.status, 14);"
+													"",
+													"tests[\"inner state is 22\"] = ",
+													"        _.isEqual(jsonData.status, 22);",
+													"tests[\"msg should be there\"] = ",
+													"        _.has(jsonData, 'msg');"
 												]
 											}
 										},
@@ -4142,24 +4250,514 @@
 											"script": {
 												"type": "text/javascript",
 												"exec": [
-													"pm.globals.set(\"var1\", pm.environment.get('update_school_id'));"
+													"pm.globals.set(\"var1\", pm.environment.get('new_school_id'));"
 												]
 											}
 										}
 									],
 									"request": {
-										"url": "{{domain}}school/{{var1}}",
 										"method": "DELETE",
 										"header": [
 											{
 												"key": "token",
-												"value": "{{student_token}}",
-												"description": ""
+												"value": "{{student_token}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{domain}}school/{{var1}}",
+											"host": [
+												"{{domain}}school"
+											],
+											"path": [
+												"{{var1}}"
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "user",
+					"description": "",
+					"item": [
+						{
+							"name": "basic account control",
+							"description": "Manupulating user account by a student",
+							"item": [
+								{
+									"name": "Token User - S",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"status code 200\"] = responseCode.code = 200;",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"respons has user\"] = _.has(jsonData, 'user');",
+													"tests[\"respons status is 1\"] = _.isEqual(jsonData.status, 1);",
+													""
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set('var1', pm.globals.get('student_token'))"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											},
+											{
+												"key": "token",
+												"value": "{{var1}}"
 											}
 										],
 										"body": {
-											"mode": "raw",
-											"raw": ""
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "admin",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "admin@test.com",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "test",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "accType",
+													"value": "s",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}user/token_user",
+											"host": [
+												"{{domain}}user"
+											],
+											"path": [
+												"token_user"
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Token User - F",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"status code 500\"] = responseCode.code = 500;",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"respons has error msg\"] = _.has(jsonData, 'msg');",
+													"tests[\"error for invalid signature\"] = _.isEqual(jsonData.msg, 'invalid signature');"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"var x = pm.globals.get('student_token') + 'a';",
+													"pm.globals.set('var1', x);"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											},
+											{
+												"key": "token",
+												"value": "{{var1}}"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "admin",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "admin@test.com",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "test",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "accType",
+													"value": "s",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}user/token_user",
+											"host": [
+												"{{domain}}user"
+											],
+											"path": [
+												"token_user"
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Token User - F",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"status code 500\"] = responseCode.code = 500;",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"respons has error msg\"] = _.has(jsonData, 'msg');",
+													"tests[\"error for invalid token\"] = _.isEqual(jsonData.msg, 'invalid token');"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"var x = pm.globals.get('student_token');",
+													"",
+													"if(x.substring(10, 11) == 'a'){",
+													"    x = x.substring(0, 10) + 'b' + x.substring(11);",
+													"} else {",
+													"    x = x.substring(0, 10) + 'a' + x.substring(11);",
+													"}",
+													"",
+													"pm.globals.set('var1', x);"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											},
+											{
+												"key": "token",
+												"value": "{{var1}}"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "admin",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "admin@test.com",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "test",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "accType",
+													"value": "s",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}user/token_user",
+											"host": [
+												"{{domain}}user"
+											],
+											"path": [
+												"token_user"
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "count username",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"status code 200\"] = responseCode.code = 200;",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"respons status is 4\"] = _.isEqual(jsonData.status, 4);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set('var1', pm.globals.get('student_token'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "admin",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "admin@test.com",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "test",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "accType",
+													"value": "s",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}user/count?username=student",
+											"host": [
+												"{{domain}}user"
+											],
+											"path": [
+												"count"
+											],
+											"query": [
+												{
+													"key": "username",
+													"value": "student",
+													"equals": true
+												}
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "count email",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"status code 200\"] = responseCode.code = 200;",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"respons status is 4\"] = _.isEqual(jsonData.status, 4);"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set('var1', pm.globals.get('student_token'));"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "admin",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "admin@test.com",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "test",
+													"description": "",
+													"type": "text"
+												},
+												{
+													"key": "accType",
+													"value": "s",
+													"description": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{domain}}user/count?email=test@test.comt",
+											"host": [
+												"{{domain}}user"
+											],
+											"path": [
+												"count"
+											],
+											"query": [
+												{
+													"key": "email",
+													"value": "test@test.comt",
+													"equals": true
+												}
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Get Extended User Account",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"tests[\"response inner state is 4\"] = ",
+													"    _.isEqual(jsonData.status, 4);",
+													"tests[\"response has result object\"] = ",
+													"    _.has(jsonData, 'result');"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"pm.globals.set('var1', pm.globals.get('extd_student_id'))"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "token",
+												"value": "{{student_token}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{domain}}user/sub/student?_id={{var1}}",
+											"host": [
+												"{{domain}}user"
+											],
+											"path": [
+												"sub",
+												"student"
+											],
+											"query": [
+												{
+													"key": "_id",
+													"value": "{{var1}}",
+													"equals": true
+												}
+											]
 										},
 										"description": ""
 									},
@@ -4176,13 +4774,11 @@
 		{
 			"name": "Test Signup",
 			"request": {
-				"url": "{{domain}}user/signup",
 				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"description": ""
+						"value": "application/x-www-form-urlencoded"
 					}
 				],
 				"body": {
@@ -4212,6 +4808,15 @@
 							"description": "",
 							"type": "text"
 						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}user/signup",
+					"host": [
+						"{{domain}}user"
+					],
+					"path": [
+						"signup"
 					]
 				},
 				"description": ""

@@ -17,6 +17,22 @@ import {MenuItems} from "./layout/main-layout/menu-items";
 import {UserProfileComponent} from "./auth/user-profile/user-profile.component";
 import {HttpClientModule} from "@angular/common/http";
 import {UserService} from "./backend/users/user.service";
+import {CookieModule} from "ngx-cookie";
+import {ToastModule, ToastOptions} from "ng2-toastr";
+import {ToastService} from "./backend/toastr.service";
+import {TextMaskModule} from "angular2-text-mask";
+import {SchoolService} from "./backend/school/shool.service";
+import {TestComponent} from "./Test.component";
+import {APIService} from "./backend/api.service";
+import {APIBackEnd} from "./backend/api.backend.service";
+
+
+// Options for toast
+export class CustomOption extends ToastOptions {
+  animate = 'flyRight'; // you can override any options available
+  newestOnTop = false;
+  showCloseButton = true;
+}
 
 @NgModule({
   declarations: [
@@ -27,22 +43,31 @@ import {UserService} from "./backend/users/user.service";
     LoginPageComponent,
     CreateAccountPageComponent,
     UserProfileComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(APP_ROUTES, { enableTracing: true }),
     FormsModule,
+    CookieModule.forRoot(),
     ReactiveFormsModule,
+    TextMaskModule,
     NgbModule.forRoot(),
     SidebarModule.forRoot(),
     NgbProgressbarModule,
     NgbTabsetModule,
     HttpClientModule,
+    ToastModule.forRoot(),
   ],
   providers: [
     MenuItems,
     UserService,
+    SchoolService,
+    APIService,
+    APIBackEnd,
+    { provide: ToastOptions, useClass: CustomOption },
+    ToastService,
   ],
   bootstrap: [AppComponent]
 })

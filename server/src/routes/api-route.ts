@@ -3,6 +3,7 @@ import {SchoolRouter} from "./school-router";
 import {UserRouter} from "./user-router";
 import {PaperRouter} from "./paper-router";
 import {QuestionRouter} from "./question-router";
+import {School} from "../models/School";
 /**
  * Created by malaka on 7/21/17.
  */
@@ -18,6 +19,12 @@ export class APIRoute {
 
 	  router.get('/test_link', (req, res) => {
 	  	res.jsonp({status : 1, message: 'welcome to mcq-api-backend'});
-	  })
+	  });
+
+	  router.get('/test', (req, res) => {
+	  	School.find().distinct('district', (err, data) => {
+	  		res.jsonp({data: data});
+		  });
+	  });
   }
 }

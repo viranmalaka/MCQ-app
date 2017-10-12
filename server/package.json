@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "nodemon": "nodemon ./bin/www",
-    "newman_local": "newman run newman_test/mcq-app_newman_test.json -e newman_test/Local_dev.postman_environment.json"
+    "newman_local": "newman run newman_test/mcq-app_newman_test.json -e newman_test/Local_dev.postman_environment.json",
+    "seeder" : "node ./dist/data-seeder/seeder.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -46,6 +47,7 @@
     "grunt-nodemon": "^0.4.2",
     "grunt-ts": "^6.0.0-beta.16",
     "nodemon": "^1.11.0",
+    "source-map-support": "^0.5.0",
     "typescript": "^2.4.1"
   }
 }
